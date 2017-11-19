@@ -31,11 +31,11 @@ def fetch_historical_prices_from_pandas(symbol_str):
     return data.DataReader(symbol_str, 'yahoo', datetime.today()-date_diff, 
                            datetime.today())
 
-def fetch_watch_list_from_dropbox():
-    watchlist_path = "./watchlist.txt"
-    if os.path.exists(watchlist_path):
-        os.unlink("./watchlist.txt")
-    call(["wget", constants.dropbox_watchlist_url])
+def fetch_watch_list_from_dropbox(dropbox_url):
+    basename = os.path.basename(dropbox_url)
+    if os.path.exists(basename):
+        os.unlink(basename)
+    call(["wget", dropbox_url])
 
 def fetch_and_store(symbol_str, symbol_dict, func):
     symbol_dict[symbol_str] = func(symbol_str)

@@ -44,17 +44,30 @@ def gen_daily_subject(symbol_lst):
     return "%s - with total selections %d" % (
             subject, len(symbol_lst))
 
+def gen_finviz_image_tr(symbol_str):
+    img_src = constants.finviz_img_url % symbol_str
+    html_str = '<tr><td><img src=' + img_src
+    html_str += ' width="67%" height="67%"/></td></tr>'
+    return html_str  
+
 def gen_daily_summary_html(symbol_lst):
     html_str = '<html><head>'
     html_str += '<body><table>'
     
     for symbol_obj in symbol_lst:
-        html_str += '<tr>'
-        html_str += '<td>%s' % symbol_obj.screen_html_str()
-        html_str += '</td></tr>'
-        img_src = constants.finviz_img_url % symbol_obj.symbol
-        html_str += '<tr><td><img src=' + img_src
-        html_str += ' width="67%" height="67%"/></td></tr>'
+        html_str += symbol_obj.screen_html_str()
+        html_str += gen_finviz_image_tr(symbol_obj.symbol)
         
+    html_str += '</table></body></head></html>'
+    return html_str
+
+def gen_watchlist_stock_html(symbol_lst):
+    html_str = '<html><head>'
+    html_str += '<body><table>'
+    
+    for symbol_obj in symbol_lst:
+        html_str += symbol_obj.watch_html_str()
+        html_str += gen_finviz_image_tr(symbol_obj.symbol)
+    
     html_str += '</table></body></head></html>'
     return html_str

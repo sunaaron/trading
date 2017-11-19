@@ -3,6 +3,7 @@ Created on Nov 10, 2017
 
 @author: Aaron
 '''
+import os
 from bs4 import BeautifulSoup
 from datetime import datetime
 from model import DailySummary, HistorySummary, Symbol
@@ -10,7 +11,6 @@ from model import DailySummary, HistorySummary, Symbol
 def process_screen_list_tr(tr):
     td_lst = tr.find_all('td', {'class': 'screener-body-table-nw'})
     symbol = td_lst[1].find('a').text
-    url = "%s%s" %("http://finviz.com/", td_lst[1].find('a').get("href"))
     company = td_lst[2].text
     sector = td_lst[3].text
     industry = td_lst[4].text
@@ -18,7 +18,6 @@ def process_screen_list_tr(tr):
     change = td_lst[9].text
     volume = td_lst[10].text
     screen_dict = {'Symbol': symbol, 
-                   'Url': url, 
                    'Company': company, 
                    'Sector': sector, 
                    'Industry': industry,
@@ -26,9 +25,9 @@ def process_screen_list_tr(tr):
                    'Change': change, 
                    'Volume': volume,
                    }
-    return Symbol(symbol=symbol, 
-                  screen_dict=screen_dict,
-                  attr_dict=None)
+    symbol_obj = Symbol(symbol=symbol)
+    symbol_obj.screen_dict = screen_dict
+    return symbol_obj 
 
 def parse_screen_list_from_finviz(raw_content):
     content = BeautifulSoup(raw_content, "html.parser")
@@ -63,9 +62,9 @@ def parse_symbol_details_from_finviz(symbol_str, raw_content):
     this function returns a Symbol object directly
     """
     attr_dict = parse_symbol_attr_dict_from_finviz(symbol_str, raw_content)
-    return Symbol(symbol=symbol_str, 
-                  screen_dict=None,
-                  attr_dict=attr_dict)
+    symbol_obj = Symbol(symbol=symbol_str)
+    symbol_obj.attr_dict = attr_dict
+    return symbol_obj
 
 def parse_historical_prices_from_yahoo(symbol, raw_content):
     """
@@ -113,8 +112,7 @@ def parse_historical_prices_from_pandas(symbol, pandas_data):
             d_sums=data
             )
     
-def parse_watchlist_from_dropbox():
-    watchlist_path = "./watchlist.txt"
+def parse_watchlist_from_dropbox(watchlist_path):
     watchlist_file = open(watchlist_path, "r")
     watchlist = watchlist_file.read().split("\n")
-    return [wl.rstrip('\r') for wl in watchlist]
+    return [Symbol(wl.rstrip('\r')) for wl in watchlist]

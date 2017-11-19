@@ -18,14 +18,14 @@ def ema(values, window):
     emas[:window] = emas[window]
     return emas
 
-def ma_diff_percent(values, window_1, window_2):
+def ma_diff_ratio(values, window_1, window_2):
     """
     values is ordered by date, ascendingly
     """
     ma_1_lst = ma(values, window_1)
     ma_2_lst = ma(values, window_2)
     ma_diff = (ma_1_lst[-1] - ma_2_lst[-1]) / ma_2_lst[-1]
-    return ma_diff 
+    return round(ma_diff, 6) 
 
 def rsi(values, n=14):
     """
@@ -53,4 +53,4 @@ def rsi(values, n=14):
         rs = up / down
         rsi[i] = 100. - 100. / (1. + rs)
 
-    return rsi[-1]
+    return round(rsi[-1], 2)
