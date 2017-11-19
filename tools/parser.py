@@ -14,15 +14,21 @@ def process_screen_list_tr(tr):
     company = td_lst[2].text
     sector = td_lst[3].text
     industry = td_lst[4].text
+    market = td_lst[6].text
     change = td_lst[9].text
     volume = td_lst[10].text
-    return {'Symbol': symbol, 
-            'Url': url, 
-            'Company': company, 
-            'Sector': sector, 
-            'Industry': industry, 
-            'Change': change, 
-            'Volume': volume}
+    screen_dict = {'Symbol': symbol, 
+                   'Url': url, 
+                   'Company': company, 
+                   'Sector': sector, 
+                   'Industry': industry,
+                   'Market': market, 
+                   'Change': change, 
+                   'Volume': volume,
+                   }
+    return Symbol(symbol=symbol, 
+                  screen_dict=screen_dict,
+                  attr_dict=None)
 
 def parse_screen_list_from_finviz(raw_content):
     content = BeautifulSoup(raw_content, "html.parser")
@@ -36,7 +42,10 @@ def parse_screen_list_from_finviz(raw_content):
         symbol_lst.append(process_screen_list_tr(tr))
     return symbol_lst
 
-def parse_symbol_details_from_finviz(symbol, raw_content):
+def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
+    """
+    this function returns attr_dict
+    """
     table = BeautifulSoup(raw_content, "html.parser").findAll(
                             "table", {"class": "snapshot-table2"})
     attr_tds = table[0].findAll("td", {"class": "snapshot-td2-cp"})
@@ -47,7 +56,15 @@ def parse_symbol_details_from_finviz(symbol, raw_content):
         attr = attr_tds[i].text
         value = value_tds[i].text
         attr_dict[attr] = value
-    return Symbol(symbol=symbol, 
+    return attr_dict
+    
+def parse_symbol_details_from_finviz(symbol_str, raw_content):
+    """
+    this function returns a Symbol object directly
+    """
+    attr_dict = parse_symbol_attr_dict_from_finviz(symbol_str, raw_content)
+    return Symbol(symbol=symbol_str, 
+                  screen_dict=None,
                   attr_dict=attr_dict)
 
 def parse_historical_prices_from_yahoo(symbol, raw_content):
@@ -101,4 +118,3 @@ def parse_watchlist_from_dropbox():
     watchlist_file = open(watchlist_path, "r")
     watchlist = watchlist_file.read().split("\n")
     return [wl.rstrip('\r') for wl in watchlist]
-

@@ -16,6 +16,8 @@ yahoo_hp_url =  "https://finance.yahoo.com/quote/%s/history/"
 
 dropbox_watchlist_url = "https://www.dropbox.com/s/v57rb9bvfc5t40h/Watchlist.txt"
 
+reuters_financial_url = "http://www.reuters.com/finance/stocks/financialHighlights?symbol=%s"
+
 # 
 # csv_path = 'input/finviz.csv'
 # 

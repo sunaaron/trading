@@ -3,8 +3,8 @@ Created on Nov 11, 2017
 
 @author: Aaron
 '''
+from context import constants
 from tools import misc
-import numpy
 
 class DailySummary(object):
     def __init__(self, dt, op, cp, vol):
@@ -39,8 +39,11 @@ class HistorySummary(object):
 
 class Symbol(object):
     
-    def __init__(self, symbol, attr_dict):
+    def __init__(self, symbol, screen_dict, attr_dict):
         self.symbol = symbol
+        # screen_dict includes all attributes from screen page
+        # attr_dict includes all attributes from symbol detail page
+        self.screen_dict = screen_dict
         self.attr_dict = attr_dict
         
     def __convert_float_value(self, value_str):
@@ -51,6 +54,29 @@ class Symbol(object):
     def __convert_M_value(self, num):
         num = num / 1000000
         return "%sM" % str(round(num, 2)) 
+        
+    def screen_html_str(self):
+        href_str = '<a href=\"%s\">%s</a>' % (
+                        self.screen_dict['Url'], 
+                        self.symbol)
+        reuters_url = constants.reuters_financial_url % self.symbol
+        reuters_str = '<a href=\"%s\">%s</a>' % (
+                        reuters_url, "financials")
+        screen_attrs = [ "Industry",
+                        "Market", 
+                        "Change", 
+                        ]
+        screen_str = " -- ".join(self.screen_dict[attr] for 
+                               attr in screen_attrs)
+
+        html_str = "%s -- %s -- %s" %(href_str, 
+                                  reuters_str, 
+                                  screen_str)
+        
+        html_str = "%s -- %s -- %s" %(html_str, 
+                                      self.get_sales_per_employee(),
+                                      self.get_income_per_employee())
+        return html_str
         
     def get_sales(self):
         return self.attr_dict['Sales']
