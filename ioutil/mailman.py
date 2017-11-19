@@ -4,12 +4,16 @@ Created on Nov 10, 2017
 @author: Aaron
 '''
 import smtplib
-from email.mime.multipart import MIMEMultipart
+from ioutil import common
+from tools import dateutil, misc
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+conf = misc.get_conf()
 
 def send_email(subject, html_message):
-    gmail_user = "aaron.sun82@gmail.com"
-    gmail_pwd = "2wsx#EDC"
+    gmail_user = conf["gmail_user"]
+    gmail_pwd = conf["gmail_pwd"]
     FROM = gmail_user
     TO = [gmail_user] 
     
@@ -34,3 +38,8 @@ def send_email(subject, html_message):
     except Exception, e:
         print e
         raise
+
+def gen_daily_subject(symbol_lst):
+    subject = "Daily Finviz Summary- %s" % dateutil.get_today_date()
+    return "%s - with total selections %d" % (
+            subject, len(symbol_lst))

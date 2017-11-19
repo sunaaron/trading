@@ -4,6 +4,7 @@ Created on Nov 11, 2017
 @author: Aaron
 '''
 from tools import fetcher, parser
+from ioutil import common, mailman
 from module import metric
 
 def track_watchlist():
@@ -18,5 +19,7 @@ def track_watchlist():
 def screen_new():
     screen_data = fetcher.fetch_screen_list_from_finviz()
     symbol_lst = parser.parse_screen_list_from_finviz(screen_data)
-    print symbol_lst
+    summary_str = common.gen_summary_html(symbol_lst)
+    subject = mailman.gen_daily_subject(symbol_lst)
+    mailman.send_email(subject, summary_str) 
 

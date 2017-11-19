@@ -25,7 +25,7 @@ def process_screen_list_tr(tr):
             'Volume': volume}
 
 def parse_screen_list_from_finviz(raw_content):
-    content = BeautifulSoup(raw_content)
+    content = BeautifulSoup(raw_content, "html.parser")
     odd_tr_lst = content.find_all('tr', {'class': 'table-dark-row-cp'})
     even_tr_lst = content.find_all('tr', {'class': 'table-light-row-cp'})
 
@@ -37,7 +37,7 @@ def parse_screen_list_from_finviz(raw_content):
     return symbol_lst
 
 def parse_symbol_details_from_finviz(symbol, raw_content):
-    table = BeautifulSoup(raw_content).findAll(
+    table = BeautifulSoup(raw_content, "html.parser").findAll(
                             "table", {"class": "snapshot-table2"})
     attr_tds = table[0].findAll("td", {"class": "snapshot-td2-cp"})
     value_tds = table[0].findAll("td", {"class": "snapshot-td2"})
@@ -55,7 +55,7 @@ def parse_historical_prices_from_yahoo(symbol, raw_content):
     Close prices only
     """
     data = []
-    rows = BeautifulSoup(raw_content).findAll('table')[0].tbody.findAll('tr')
+    rows = BeautifulSoup(raw_content, "html.parser").findAll('table')[0].tbody.findAll('tr')
 
     for each_row in rows:
         divs = each_row.findAll('td')
