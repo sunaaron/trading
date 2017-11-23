@@ -117,9 +117,13 @@ class Symbol(object):
                                         "<b>Earning_date</b>",
                                         self.attr_dict['Earnings'])
         
+        html_str = "%s %s: %s" %(html_str, 
+                                 "<b>Perf Year</b>", 
+                                 self.attr_dict['Perf Year'])
+        
         html_str = "%s %s: %s </td></tr>" %(html_str, 
-                                            "<b>Perf Year</b>", 
-                                            self.attr_dict['Perf Year'])
+                                            "<b>Dividend %</b>", 
+                                            self.attr_dict['Dividend %'])
         return html_str
     
     def fund_watch_html_str(self):
