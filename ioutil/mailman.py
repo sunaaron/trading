@@ -39,10 +39,20 @@ def send_email(subject, html_message):
         print e
         raise
 
-def gen_daily_subject(symbol_lst):
+def gen_daily_screen_subject(symbol_lst):
     subject = "Daily Finviz Summary- %s" % dateutil.get_today_date()
     return "%s - with total selections %d" % (
             subject, len(symbol_lst))
+
+def gen_daily_watch_subject(watch_type):
+    return "Daily %s Watch List - %s" % (watch_type, 
+                                         dateutil.get_today_date())
+
+def gen_table_header():
+    return '<html><head><body><table>'
+
+def gen_table_footer():
+    return '</table></body></head></html>'
 
 def gen_finviz_image_tr(symbol_str):
     img_src = constants.finviz_img_url % symbol_str
@@ -51,23 +61,31 @@ def gen_finviz_image_tr(symbol_str):
     return html_str  
 
 def gen_daily_summary_html(symbol_lst):
-    html_str = '<html><head>'
-    html_str += '<body><table>'
+    html_str = gen_table_header()
     
     for symbol_obj in symbol_lst:
         html_str += symbol_obj.screen_html_str()
         html_str += gen_finviz_image_tr(symbol_obj.symbol)
         
-    html_str += '</table></body></head></html>'
+    html_str += gen_table_footer()
     return html_str
 
 def gen_watchlist_stock_html(symbol_lst):
-    html_str = '<html><head>'
-    html_str += '<body><table>'
+    html_str = gen_table_header()
     
     for symbol_obj in symbol_lst:
-        html_str += symbol_obj.watch_html_str()
+        html_str += symbol_obj.stock_watch_html_str()
         html_str += gen_finviz_image_tr(symbol_obj.symbol)
     
-    html_str += '</table></body></head></html>'
+    html_str += gen_table_footer()
+    return html_str
+
+def gen_watchlist_fund_html(symbol_lst):
+    html_str = gen_table_header()
+    
+    for symbol_obj in symbol_lst:
+        html_str += symbol_obj.fund_watch_html_str()
+        html_str += gen_finviz_image_tr(symbol_obj.symbol)
+    
+    html_str += gen_table_footer()
     return html_str

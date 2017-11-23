@@ -74,46 +74,63 @@ class Symbol(object):
         screen_str = " -- ".join(self.screen_dict[attr] for 
                                attr in screen_attrs)
 
-        html_str = "%s(%s) -- %s</td></tr>" %(href_str, 
-                                  reuters_str, 
-                                  screen_str)
+        html_str = "%s (%s) -- %s</td></tr>" %(href_str, 
+                                              reuters_str, 
+                                              screen_str)
         
-        html_str = "%s<tr><td>%s: %s" %(html_str, "sales/e",
-                                        self.sales_per_employee()),
-        html_str = "%s -- %s: %s</td></tr>" %(html_str, "profit/e",
-                                              self.income_per_employee())
+        html_str = "%s<tr><td>%s: %s" %(html_str, "<b>Sales/e</b>",
+                                        self.sales_per_employee())
+        html_str = "%s %s: %s</td></tr>" %(html_str, "Profit/e",
+                                           self.income_per_employee())
         return html_str
         
-    def watch_html_str(self):
+    def stock_watch_html_str(self):
         finviz_url = constants.finviz_quote_url % self.symbol
-        href_str = '<tr><td><a href=\"%s\">%s</a>' % (finviz_url, 
-                                              self.symbol)
+        href_str = '<tr><td><a href=\"%s\">%s</a>' % (
+                    finviz_url, self.symbol)
         reuters_url = constants.reuters_financial_url % self.symbol
         reuters_str = '<a href=\"%s\">%s</a>' % (reuters_url, 
                                                  "financials")
 
-        html_str = "%s(%s)</td></tr>" %(href_str, reuters_str)
+        html_str = "%s (%s)</td></tr>" %(href_str, reuters_str)
         
         html_str = "%s<tr><td>%s: %s" %(html_str, 
-                                        "<b>sales/e</b>",
+                                        "<b>Sales/e</b>",
                                         self.sales_per_employee())
         
         html_str = "%s %s: %s</td></tr>" %(html_str, 
-                                              "<b>profit/e</b>",
-                                              self.income_per_employee())
+                                           "<b>Profit/e</b>",
+                                           self.income_per_employee())
         
-        html_str = "%s<tr><td>%s: %s" %(html_str, 
-                                        "<b>rsi</b>", 
-                                        self.rsi_value())
+        html_str = "%s<tr><td>%s: %s (%s)" %(html_str, 
+                                             "<b>Rsi</b>", 
+                                             self.rsi_value(), 
+                                             self.rsi_str())
         
         html_str = "%s %s: %s (%s)</td></tr>" %(html_str, 
-                                                   "<b>ma_diff</b>", 
-                                                   self.ma_diff_value(), 
-                                                   self.ma_diff_str())
+                                                "<b>Ma_diff</b>", 
+                                                self.ma_diff_value(), 
+                                                self.ma_diff_str())
         
         html_str = "%s<tr><td>%s: %s</td></tr>" %(html_str, 
-                                                  "<b>earning_dt</b>",
+                                                  "<b>Earning_date</b>",
                                                   self.attr_dict['Earnings'])
+        return html_str
+    
+    def fund_watch_html_str(self):
+        finviz_url = constants.finviz_quote_url % self.symbol
+        href_str = '<tr><td><a href=\"%s\">%s</a>' % (
+                    finviz_url, self.symbol)
+
+        html_str = "%s<tr><td>%s: %s (%s)" %(href_str, 
+                                             "<b>Rsi</b>", 
+                                             self.rsi_value(), 
+                                             self.rsi_str())
+        
+        html_str = "%s %s: %s (%s)</td></tr>" %(html_str, 
+                                                "<b>Ma_diff</b>", 
+                                                self.ma_diff_value(), 
+                                                self.ma_diff_str())
         return html_str
 
     def open_prices(self):
@@ -150,6 +167,13 @@ class Symbol(object):
             self.rsi = metric.rsi(self.close_prices())
         return self.rsi
     
+    def rsi_str(self):
+        if self.rsi >= 70:
+            return "<font color=\"red\">Overbought</font>"
+        if self.rsi <= 30: 
+            return "<font color=\"green\">Good Buy</font>"
+        return "<font color=\"orange\">Might be ok</font>"
+        
     def ma_diff_value(self):
         if self.ma_diff is None:
             self.ma_diff = metric.ma_diff_ratio(
@@ -157,9 +181,8 @@ class Symbol(object):
         return self.ma_diff
     
     def ma_diff_str(self):
-        if self.ma_diff >= 0.001 and self.ma_diff <= 0.01:
+        if self.ma_diff >= 0 and self.ma_diff <= 0.0075:
             return "<font color=\"green\">Good Buy</font>"
-        if self.ma_diff > 0.01:
+        if self.ma_diff > 0.0075:
             return "<font color=\"red\">Overbought</font>"
-        if self.ma_diff < 0.001:
-            return "<font color=\"red\">Negative</font>"
+        return "<font color=\"orange\">Might be ok</font>"

@@ -6,5 +6,6 @@ Created on Nov 10, 2017
 from view import view
 
 if __name__ == '__main__':
-#     view.screen_new()
+    view.screen_new()
     view.track_stocklist()
+    view.track_fundlist()
