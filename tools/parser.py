@@ -112,7 +112,22 @@ def parse_historical_prices_from_pandas(symbol, pandas_data):
             d_sums=data
             )
     
-def parse_watchlist_from_dropbox(watchlist_path):
-    watchlist_file = open(watchlist_path, "r")
+def parse_stock_watchlist_from_dropbox():
+    watchlist_file = open("stock.txt", "r")
     watchlist = watchlist_file.read().split("\n")
     return [Symbol(wl.rstrip('\r')) for wl in watchlist]
+
+def parse_fund_watchlist_from_dropbox():
+    watchlist_file = open("fund.txt", "r")
+    symbol_lst = []
+    for line in watchlist_file:
+        line_lst = line.split('-')
+        symbol_str = line_lst[0].rstrip(' ')
+        symbol_desc = line_lst[1].lstrip(' ')
+        symbol_obj = Symbol(symbol_str)
+        symbol_obj.desc = symbol_desc
+        symbol_lst.append(symbol_obj)
+    return symbol_lst
+        
+        
+    

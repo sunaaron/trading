@@ -5,14 +5,19 @@ Created on Nov 10, 2017
 '''
 from datetime import datetime, timedelta
 import os
+import time
 from threading import Thread
 import requests
 import urllib2
 
-from context import constants 
+from context import constants
+from tools import misc
+ 
 from pandas_datareader import data, wb
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from subprocess import call
+
+conf = misc.get_conf()
 
 def fetch_screen_list_from_finviz():
     return urllib2.urlopen(constants.finviz_screen_url).read()
@@ -42,8 +47,10 @@ def fetch_and_store(symbol_str, symbol_dict, func):
     
 def fetch_batch(symbol_lst, func):
     symbol_dict = {}
+    batch_size = int(conf['fetch_batch_size'])
 
     thread_lst = []
+    count = 0
     for symbol_obj in symbol_lst:
         t = Thread(target = fetch_and_store, 
                    args = (symbol_obj.symbol, 
@@ -52,6 +59,9 @@ def fetch_batch(symbol_lst, func):
                            ))
         thread_lst.append(t)
         t.start()
+        count += 1
+        if batch_size > 0 and count % batch_size == 0:
+            time.sleep(5)
  
     for t in thread_lst:
         t.join()    

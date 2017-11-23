@@ -42,6 +42,7 @@ class Symbol(object):
     
     def __init__(self, symbol):
         self.symbol = symbol
+        self.desc = None
         # screen_dict includes all attributes from screen page
         # attr_dict includes all attributes from symbol detail page
         self.screen_dict = None
@@ -112,17 +113,23 @@ class Symbol(object):
                                                 self.ma_diff_value(), 
                                                 self.ma_diff_str())
         
-        html_str = "%s<tr><td>%s: %s</td></tr>" %(html_str, 
-                                                  "<b>Earning_date</b>",
-                                                  self.attr_dict['Earnings'])
+        html_str = "%s<tr><td>%s: %s" %(html_str, 
+                                        "<b>Earning_date</b>",
+                                        self.attr_dict['Earnings'])
+        
+        html_str = "%s %s: %s </td></tr>" %(html_str, 
+                                            "<b>Perf Year</b>", 
+                                            self.attr_dict['Perf Year'])
         return html_str
     
     def fund_watch_html_str(self):
         finviz_url = constants.finviz_quote_url % self.symbol
         href_str = '<tr><td><a href=\"%s\">%s</a>' % (
                     finviz_url, self.symbol)
+        
+        html_str = "%s (%s)</td></tr>" %(href_str, self.desc)
 
-        html_str = "%s<tr><td>%s: %s (%s)" %(href_str, 
+        html_str = "%s<tr><td>%s: %s (%s)" %(html_str, 
                                              "<b>Rsi</b>", 
                                              self.rsi_value(), 
                                              self.rsi_str())
@@ -131,6 +138,13 @@ class Symbol(object):
                                                 "<b>Ma_diff</b>", 
                                                 self.ma_diff_value(), 
                                                 self.ma_diff_str())
+        html_str = "%s<tr><td>%s: %s" %(html_str, 
+                                        "<b>Perf Year</b>",
+                                        self.attr_dict['Perf Year'])
+
+        html_str = "%s %s: %s </td></tr>" %(html_str, 
+                                            "<b>Dividend %</b>", 
+                                            self.attr_dict['Dividend %'])
         return html_str
 
     def open_prices(self):
