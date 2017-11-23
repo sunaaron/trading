@@ -28,4 +28,4 @@ def can_do_stock_track():
 
 def can_do_fund_track():
     weekday = get_weekday()
-    return weekday in [1, 4]
+    return weekday in [1, 3]
