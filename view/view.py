@@ -19,6 +19,18 @@ def hydrate_symbol_obj(symbol_lst):
         symbol_obj.history_prices = parser.parse_historical_prices_from_pandas(
                                 symbol_str, symbol_hp_dict[symbol_str])
 
+def hydrate_symbol_obj_if_stock(symbol_lst):
+    symbol_annual_dict = fetcher.fetch_batch(symbol_lst, 
+                                             fetcher.fetch_annual_stmt_from_mw)
+    symbol_quarterly_dict = fetcher.fetch_batch(symbol_lst, 
+                                                fetcher.fetch_quarterly_stmt_from_mw)
+    for symbol_obj in symbol_lst:
+        symbol_str = symbol_obj.symbol
+        symbol_obj.annual_sales, symbol_obj.annual_incomes = parser.parse_stmt_from_mw(
+                                        symbol_str, symbol_annual_dict[symbol_str])
+        symbol_obj.quarterly_sales, symbol_obj.quarterly_incomes = parser.parse_stmt_from_mw(
+                                        symbol_str, symbol_quarterly_dict[symbol_str])
+
 def track_fundlist():
     fetcher.fetch_watch_list_from_dropbox(constants.dropbox_fundlist_url)
     symbol_lst = parser.parse_fund_watchlist_from_dropbox()
@@ -31,6 +43,7 @@ def track_stocklist():
     fetcher.fetch_watch_list_from_dropbox(constants.dropbox_stocklist_url)
     symbol_lst = parser.parse_stock_watchlist_from_dropbox()
     hydrate_symbol_obj(symbol_lst)
+#     hydrate_symbol_obj_if_stock(symbol_lst)
     summary_str = mailman.gen_watchlist_stock_html(symbol_lst)
     mailman.send_email(mailman.gen_daily_watch_subject("stock"), 
                        summary_str)

@@ -48,26 +48,50 @@ class Symbol(object):
         self.screen_dict = None
         self.attr_dict = None
         self.history_prices = None
+
+        self.annual_sales = None
+        self.quarterly_sales = None
+        self.annual_incomes = None
+        self.quarterly_incomes = None
         
         self.rsi = None
         self.ma_diff = None
     
     def __convert_float_value(self, value_str):
+        valueSign = 1
+        if value_str.startswith('(') and value_str.endswith(')'):
+            value_str = value_str.strip("()")
+            valueSign = -1
         value = float(value_str[:-1])
         unit = value_str[-1]
-        return value * misc.get_multiplier(unit)
+        return value * misc.get_multiplier(unit) * valueSign
     
     def __convert_M_value(self, num):
         num = num / 1000000
         return "%sM" % str(round(num, 2)) 
+    
+    def __convert_percent(self, float_value):
+        return "{0:.1f}%".format(float_value*100)
+    
+    def __gen_growth(self, value_lst):
+        growth = []
+        values = [self.__convert_float_value(v) 
+                  for v in value_lst]
+        for i in xrange(1, len(values)):
+            change = (values[i] - values[i-1])/values[i-1]
+            growth.append(self.__convert_percent(change))
+        return growth
         
     def screen_html_str(self):
         finviz_url = constants.finviz_quote_url % self.symbol
         href_str = '<tr><td><a href=\"%s\">%s</a>' % (finviz_url, 
-                                              self.symbol)
-        reuters_url = constants.reuters_financial_url % self.symbol
-        reuters_str = '<a href=\"%s\">%s</a>' % (reuters_url, 
-                                                 "financials")
+                                                      self.symbol)
+        mw_annual_url = constants.mw_annual_url % self.symbol
+        mw_quarterly_url = constants.mw_quarterly_url % self.symbol
+        annual_str = '<a href=\"%s\">%s</a>' % (mw_annual_url, 
+                                                "Annual Stmt")
+        quarterly_str = '<a href=\"%s\">%s</a>' % (mw_quarterly_url, 
+                                                   "Quarterly Stmt")
         screen_attrs = ["Industry",
                         "Market", 
                         "Change", 
@@ -75,9 +99,10 @@ class Symbol(object):
         screen_str = " -- ".join(self.screen_dict[attr] for 
                                attr in screen_attrs)
 
-        html_str = "%s (%s) -- %s</td></tr>" %(href_str, 
-                                              reuters_str, 
-                                              screen_str)
+        html_str = "%s (%s) (%s) -- %s</td></tr>" %(href_str, 
+                                                    annual_str, 
+                                                    quarterly_str,
+                                                    screen_str)
         
         html_str = "%s<tr><td>%s: %s" %(html_str, "<b>Sales/e</b>",
                                         self.sales_per_employee())
@@ -89,11 +114,16 @@ class Symbol(object):
         finviz_url = constants.finviz_quote_url % self.symbol
         href_str = '<tr><td><a href=\"%s\">%s</a>' % (
                     finviz_url, self.symbol)
-        reuters_url = constants.reuters_financial_url % self.symbol
-        reuters_str = '<a href=\"%s\">%s</a>' % (reuters_url, 
-                                                 "financials")
+        mw_annual_url = constants.mw_annual_url % self.symbol
+        mw_quarterly_url = constants.mw_quarterly_url % self.symbol
+        annual_str = '<a href=\"%s\">%s</a>' % (mw_annual_url, 
+                                                "Annual Stmt")
+        quarterly_str = '<a href=\"%s\">%s</a>' % (mw_quarterly_url, 
+                                                   "Quarterly Stmt")
 
-        html_str = "%s (%s)</td></tr>" %(href_str, reuters_str)
+        html_str = "%s (%s) (%s)</td></tr>" %(href_str, 
+                                              annual_str,
+                                              quarterly_str)
         
         html_str = "%s<tr><td>%s: %s" %(html_str, 
                                         "<b>Sales/e</b>",
@@ -124,6 +154,7 @@ class Symbol(object):
         html_str = "%s %s: %s </td></tr>" %(html_str, 
                                             "<b>Dividend %</b>", 
                                             self.attr_dict['Dividend %'])
+        
         return html_str
     
     def fund_watch_html_str(self):
@@ -204,3 +235,18 @@ class Symbol(object):
         if self.ma_diff > 0.0075:
             return "<font color=\"red\">Overbought</font>"
         return "<font color=\"orange\">Might be ok</font>"
+
+    def annual_sales_growth(self):
+        """
+        These numbers might contain errors 
+        """
+        return self.__gen_growth(self.annual_sales)
+
+    def annual_income_growth(self):
+        return self.__gen_growth(self.annual_incomes)
+
+    def quarterly_sales_growth(self):
+        return self.__gen_growth(self.quarterly_sales)
+        
+    def quarterly_income_growth(self):
+        return self.__gen_growth(self.quarterly_incomes)

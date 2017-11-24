@@ -16,4 +16,5 @@ yahoo_hp_url =  "https://finance.yahoo.com/quote/%s/history/"
 dropbox_stocklist_url = "https://www.dropbox.com/s/v57rb9bvfc5t40h/stock.txt"
 dropbox_fundlist_url = "https://www.dropbox.com/s/t7wfkzq85u13c43/fund.txt"
 
-reuters_financial_url = "http://www.reuters.com/finance/stocks/financialHighlights?symbol=%s"
+mw_annual_url = "https://www.marketwatch.com/investing/stock/%s/financials"
+mw_quarterly_url = "https://www.marketwatch.com/investing/stock/%s/financials/income/quarter"

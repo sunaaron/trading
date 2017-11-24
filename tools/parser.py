@@ -3,7 +3,6 @@ Created on Nov 10, 2017
 
 @author: Aaron
 '''
-import os
 from bs4 import BeautifulSoup
 from datetime import datetime
 from model import DailySummary, HistorySummary, Symbol
@@ -66,7 +65,19 @@ def parse_symbol_details_from_finviz(symbol_str, raw_content):
     symbol_obj.attr_dict = attr_dict
     return symbol_obj
 
-def parse_historical_prices_from_yahoo(symbol, raw_content):
+def parse_stmt_from_mw(symbol_str, raw_content):
+    tr_sales = BeautifulSoup(raw_content, "html.parser").findAll(
+                            "tr", {"class": "partialSum"})
+    td_sales = tr_sales[0].findAll("td", {"class": "valueCell"})
+    sales = [td.text for td in td_sales]
+    
+    tr_income = BeautifulSoup(raw_content, "html.parser").findAll(
+                            "tr", {"class": "totalRow"})
+    td_income = tr_income[0].findAll("td", {"class": "valueCell"})
+    income = [td.text for td in td_income]
+    return sales, income
+
+def parse_historical_prices_from_yahoo(symbol_str, raw_content):
     """
     Close prices only
     """
@@ -86,7 +97,7 @@ def parse_historical_prices_from_yahoo(symbol, raw_content):
             data.append(d_summary)
     
     return HistorySummary(
-            symbol=symbol,
+            symbol=symbol_str,
             d_sums=data[::-1]
             )
 
@@ -128,6 +139,5 @@ def parse_fund_watchlist_from_dropbox():
         symbol_obj.desc = symbol_desc
         symbol_lst.append(symbol_obj)
     return symbol_lst
-        
-        
+
     

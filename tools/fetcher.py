@@ -41,6 +41,14 @@ def fetch_watch_list_from_dropbox(dropbox_url):
     if os.path.exists(basename):
         os.unlink(basename)
     call(["wget", dropbox_url])
+    
+def fetch_annual_stmt_from_mw(symbol_str):
+    url = constants.mw_annual_url % symbol_str
+    return urllib2.urlopen(url).read()
+
+def fetch_quarterly_stmt_from_mw(symbol_str):
+    url = constants.mw_quarterly_url % symbol_str
+    return urllib2.urlopen(url).read()
 
 def fetch_and_store(symbol_str, symbol_dict, func):
     symbol_dict[symbol_str] = func(symbol_str)
