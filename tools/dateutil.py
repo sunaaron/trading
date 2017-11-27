@@ -10,7 +10,7 @@ def get_today_date():
 
 def get_year_month():
     now = datetime.datetime.now()
-    return "%s-%s" %(now.year, now.month)
+    return "%s-%s" %(now.year, '{:02d}'.format(now.month))
 
 def get_weekday():
     """
@@ -19,13 +19,16 @@ def get_weekday():
     return datetime.datetime.today().weekday()
 
 def can_do_screen():
+    """
+    As measured by UTC time (a bit tricky)
+    """
     weekday = get_weekday()
-    return weekday in [0, 1, 2, 3, 4]
+    return weekday in [1, 2, 3, 4, 5]
 
 def can_do_stock_track():
     weekday = get_weekday()
-    return weekday in [0, 2, 4]
+    return weekday in [1, 3, 5]
 
 def can_do_fund_track():
     weekday = get_weekday()
-    return weekday in [1, 3]
+    return weekday in [2, 4]

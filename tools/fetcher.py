@@ -5,9 +5,9 @@ Created on Nov 10, 2017
 '''
 from datetime import datetime, timedelta
 import os
+import requests
 import time
 from threading import Thread
-import requests
 import urllib2
 
 from context import constants
@@ -19,8 +19,8 @@ from subprocess import call
 
 conf = misc.get_conf()
 
-def fetch_screen_list_from_finviz():
-    return urllib2.urlopen(constants.finviz_screen_url).read()
+def fetch_screen_list_from_finviz(finviz_screen_url):
+    return urllib2.urlopen(finviz_screen_url).read()
 
 def fetch_symbol_details_from_finviz(symbol_str):
     url = constants.finviz_quote_url % symbol_str
@@ -69,7 +69,7 @@ def fetch_batch(symbol_lst, func):
         t.start()
         count += 1
         if batch_size > 0 and count % batch_size == 0:
-            time.sleep(5)
+            time.sleep(3)
  
     for t in thread_lst:
         t.join()    

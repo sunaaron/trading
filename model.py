@@ -39,7 +39,13 @@ class HistorySummary(object):
         return [ds.open for ds in self.daily_summaries]
 
 class Symbol(object):
-    
+    dict_attrs = [
+                  "symbol", "desc",
+                  "screen_dict", "attr_dict", "history_prices", 
+                  "annual_sales", "annual_incomes", 
+                  "quarterly_sales", "quarterly_incomes",
+                  ]
+
     def __init__(self, symbol):
         self.symbol = symbol
         self.desc = None
@@ -56,15 +62,28 @@ class Symbol(object):
         
         self.rsi = None
         self.ma_diff = None
+        
+    def to_dict(self):
+        symbol_dict = {}
+        for attr in self.dict_attrs:
+            symbol_dict[attr] = self.__getattribute__(attr)
+        return symbol_dict
     
+    def from_dict(self, symbol_dict):
+        for attr in self.dict_attrs:
+            self.__setattr__(attr, symbol_dict[attr])
+        
     def __convert_float_value(self, value_str):
         valueSign = 1
         if value_str.startswith('(') and value_str.endswith(')'):
             value_str = value_str.strip("()")
             valueSign = -1
-        value = float(value_str[:-1])
-        unit = value_str[-1]
-        return value * misc.get_multiplier(unit) * valueSign
+        if value_str[-1] in ('B', 'M', 'K'):
+            value = float(value_str[:-1])
+            unit = value_str[-1]
+            return value * misc.get_multiplier(unit) * valueSign
+        else:
+            return float(value_str) * valueSign
     
     def __convert_M_value(self, num):
         num = num / 1000000
@@ -105,9 +124,9 @@ class Symbol(object):
                                                     screen_str)
         
         html_str = "%s<tr><td>%s: %s" %(html_str, "<b>Sales/e</b>",
-                                        self.sales_per_employee())
+                                        self.sales_per_employee_str())
         html_str = "%s %s: %s</td></tr>" %(html_str, "Profit/e",
-                                           self.income_per_employee())
+                                           self.income_per_employee_str())
         return html_str
         
     def stock_watch_html_str(self):
@@ -127,11 +146,11 @@ class Symbol(object):
         
         html_str = "%s<tr><td>%s: %s" %(html_str, 
                                         "<b>Sales/e</b>",
-                                        self.sales_per_employee())
+                                        self.sales_per_employee_str())
         
         html_str = "%s %s: %s</td></tr>" %(html_str, 
                                            "<b>Profit/e</b>",
-                                           self.income_per_employee())
+                                           self.income_per_employee_str())
         
         html_str = "%s<tr><td>%s: %s (%s)" %(html_str, 
                                              "<b>Rsi</b>", 
@@ -201,16 +220,34 @@ class Symbol(object):
         if self.sales() == '-':
             return ''
         sales = self.__convert_float_value(self.sales())
-        sales_per_employee = sales / self.num_of_employee()
-        return self.__convert_M_value(sales_per_employee) 
+        return sales / self.num_of_employee()
+        
+    def sales_per_employee_str(self):
+        return self.__convert_M_value(self.sales_per_employee()) 
 
     def income_per_employee(self):
         if self.income() == '-':
             return ''
         income = self.__convert_float_value(self.income())
-        income_per_employee = income/self.num_of_employee()
-        return self.__convert_M_value(income_per_employee)
+        return income/self.num_of_employee()
     
+    def income_per_employee_str(self):
+        return self.__convert_M_value(self.income_per_employee())
+    
+    def num_shares(self):
+        return self.__convert_float_value(self.attr_dict['Shs Outstand'])
+        
+    def cash(self):
+        cash_per_share = self.__convert_float_value(
+                            self.attr_dict['Cash/sh'])
+        return self.num_shares() * cash_per_share
+    
+    def cash_per_employee(self):
+        return self.cash()/self.num_of_employee()
+    
+    def cash_per_employee_str(self):
+        return self.__convert_M_value(self.cash_per_employee())
+        
     def rsi_value(self):
         if self.rsi is None:
             self.rsi = metric.rsi(self.close_prices())

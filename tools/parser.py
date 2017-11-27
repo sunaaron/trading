@@ -5,7 +5,9 @@ Created on Nov 10, 2017
 '''
 from bs4 import BeautifulSoup
 from datetime import datetime
+from ioutil import diskman
 from model import DailySummary, HistorySummary, Symbol
+from tools import fetcher
 
 def process_screen_list_tr(tr):
     td_lst = tr.find_all('td', {'class': 'screener-body-table-nw'})
@@ -28,6 +30,12 @@ def process_screen_list_tr(tr):
     symbol_obj.screen_dict = screen_dict
     return symbol_obj 
 
+def parse_screen_list_urls_from_finviz(raw_content):
+    content = BeautifulSoup(raw_content, "html.parser")
+    a_lst = content.find_all('a', {'class': 'screener-pages'})
+    urls = ["https://finviz.com/%s" % a["href"] for a in a_lst]
+    return urls
+
 def parse_screen_list_from_finviz(raw_content):
     content = BeautifulSoup(raw_content, "html.parser")
     odd_tr_lst = content.find_all('tr', {'class': 'table-dark-row-cp'})
@@ -38,6 +46,7 @@ def parse_screen_list_from_finviz(raw_content):
         symbol_lst.append(process_screen_list_tr(tr))
     for tr in even_tr_lst:
         symbol_lst.append(process_screen_list_tr(tr))
+    
     return symbol_lst
 
 def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
@@ -54,6 +63,13 @@ def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
         attr = attr_tds[i].text
         value = value_tds[i].text
         attr_dict[attr] = value
+
+    td_lst = BeautifulSoup(raw_content, "html.parser").findAll(
+                "td", {"class": "fullview-links"})
+    a_lst = td_lst[1].findAll("a")
+    attr_dict["Sector"] = a_lst[0].text
+    attr_dict["Industry"] = a_lst[1].text
+    
     return attr_dict
     
 def parse_symbol_details_from_finviz(symbol_str, raw_content):
@@ -69,12 +85,12 @@ def parse_stmt_from_mw(symbol_str, raw_content):
     tr_sales = BeautifulSoup(raw_content, "html.parser").findAll(
                             "tr", {"class": "partialSum"})
     td_sales = tr_sales[0].findAll("td", {"class": "valueCell"})
-    sales = [td.text for td in td_sales]
+    sales = [td.text for td in td_sales if td.text != '-']
     
     tr_income = BeautifulSoup(raw_content, "html.parser").findAll(
                             "tr", {"class": "totalRow"})
     td_income = tr_income[0].findAll("td", {"class": "valueCell"})
-    income = [td.text for td in td_income]
+    income = [td.text for td in td_income if td.text != '-']
     return sales, income
 
 def parse_historical_prices_from_yahoo(symbol_str, raw_content):
@@ -124,9 +140,7 @@ def parse_historical_prices_from_pandas(symbol, pandas_data):
             )
     
 def parse_stock_watchlist_from_dropbox():
-    watchlist_file = open("stock.txt", "r")
-    watchlist = watchlist_file.read().split("\n")
-    return [Symbol(wl.rstrip('\r')) for wl in watchlist]
+    return diskman.load_symbol_as_object("stock.txt")
 
 def parse_fund_watchlist_from_dropbox():
     watchlist_file = open("fund.txt", "r")
