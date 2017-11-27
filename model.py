@@ -93,15 +93,18 @@ class Symbol(object):
     def __convert_percent(self, float_value):
         return "{0:.1f}%".format(float_value*100)
     
-    def __gen_growth(self, value_lst):
+    def __gen_growth(self, value_lst, as_percent=True):
         growth = []
         values = [self.__convert_float_value(v) 
                   for v in value_lst]
         for i in xrange(1, len(values)):
             change = (values[i] - values[i-1])/values[i-1]
-            growth.append(self.__convert_percent(change))
+            if as_percent:
+                growth.append(self.__convert_percent(change))
+            else:
+                growth.append(change)
         return growth
-        
+    
     def screen_html_str(self):
         finviz_url = constants.finviz_quote_url % self.symbol
         href_str = '<tr><td><a href=\"%s\">%s</a>' % (finviz_url, 
@@ -281,12 +284,29 @@ class Symbol(object):
         These numbers might contain errors 
         """
         return self.__gen_growth(self.annual_sales)
-
+    
+    def annual_sales_growth_trend(self):
+        return metric.slope(self.__gen_growth(
+                    self.annual_sales, as_percent=False))
+    
     def annual_income_growth(self):
         return self.__gen_growth(self.annual_incomes)
-
+    
+    def annual_income_growth_trend(self):
+        return metric.slope(self.__gen_growth(
+                    self.annual_incomes, as_percent=False))
+    
     def quarterly_sales_growth(self):
         return self.__gen_growth(self.quarterly_sales)
+
+    def quarterly_sales_growth_trend(self):
+        return metric.slope(self.__gen_growth(
+                    self.quarterly_sales, as_percent=False))
         
     def quarterly_income_growth(self):
         return self.__gen_growth(self.quarterly_incomes)
+    
+    def quarterly_income_growth_trend(self):
+        return metric.slope(self.__gen_growth(
+                    self.quarterly_incomes, as_percent=False))
+

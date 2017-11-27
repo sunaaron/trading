@@ -3,6 +3,7 @@ Created on Nov 11, 2017
 
 @author: Aaron
 '''
+from scipy import stats
 import numpy as np
 
 def ma(values, window):
@@ -17,6 +18,14 @@ def ema(values, window):
     emas = np.convolve(values, weights, mode='full')[: len(values)]
     emas[:window] = emas[window]
     return emas
+
+def slope(values):
+    if len(values) == 0:
+        return 0
+    x_array = np.asarray([i+1 for i in xrange(len(values))])
+    values_array = np.asarray(values)
+    slope, _, _, _, _ = stats.linregress(x_array, values_array)
+    return round(slope, 3)
 
 def ma_diff_ratio(values, window_1, window_2):
     """
