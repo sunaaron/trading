@@ -84,13 +84,16 @@ def parse_symbol_details_from_finviz(symbol_str, raw_content):
 def parse_stmt_from_mw(symbol_str, raw_content):
     tr_sales = BeautifulSoup(raw_content, "html.parser").findAll(
                             "tr", {"class": "partialSum"})
-    td_sales = tr_sales[0].findAll("td", {"class": "valueCell"})
-    sales = [td.text for td in td_sales if td.text != '-']
-    
+    sales, income = [], []
+    if len(tr_sales) > 0:
+        td_sales = tr_sales[0].findAll("td", {"class": "valueCell"})
+        sales = [td.text for td in td_sales if td.text != '-']
+
     tr_income = BeautifulSoup(raw_content, "html.parser").findAll(
                             "tr", {"class": "totalRow"})
-    td_income = tr_income[0].findAll("td", {"class": "valueCell"})
-    income = [td.text for td in td_income if td.text != '-']
+    if len(tr_income) > 0:
+        td_income = tr_income[0].findAll("td", {"class": "valueCell"})
+        income = [td.text for td in td_income if td.text != '-']
     return sales, income
 
 def parse_historical_prices_from_yahoo(symbol_str, raw_content):

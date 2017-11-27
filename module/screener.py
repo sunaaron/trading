@@ -42,8 +42,15 @@ def hydrate_and_dump_diff_symbols():
     For all diff symbols, do complete hydration, and persist by pickle
     """
     diff_symbols = diskman.load_symbol_as_object("./data/diff.txt")
-    hydrator.hydrate_complete(diff_symbols)
-    diskman.dump_symbol_dict_by_pickle(diff_symbols)
+    
+    batch_symbols = []
+    for i in xrange(len(diff_symbols)):
+        batch_symbols.append(diff_symbols[i])
+        if (i+1)%10 == 0 or i == len(diff_symbols)-1:
+            print i
+            hydrator.hydrate_complete(batch_symbols)
+            diskman.dump_symbol_dict_by_pickle(batch_symbols)
+            batch_symbols = []
 
 def gen_caption():
     caption_str = ""
@@ -107,7 +114,7 @@ def gen_table():
     diskman.save_screen_table(table_str)
 
 def screen_manually():
-#     fetch_all_symbols()
-#     update_union_and_diff()
+    fetch_all_symbols()
+    update_union_and_diff()
     hydrate_and_dump_diff_symbols()
     gen_table()

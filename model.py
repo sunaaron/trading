@@ -74,6 +74,7 @@ class Symbol(object):
             self.__setattr__(attr, symbol_dict[attr])
         
     def __convert_float_value(self, value_str):
+        value_str = value_str.replace(',', '')
         valueSign = 1
         if value_str.startswith('(') and value_str.endswith(')'):
             value_str = value_str.strip("()")
@@ -238,6 +239,8 @@ class Symbol(object):
         return self.__convert_float_value(self.attr_dict['Shs Outstand'])
         
     def cash(self):
+        if self.attr_dict['Cash/sh'] == "-":
+            return 0
         cash_per_share = self.__convert_float_value(
                             self.attr_dict['Cash/sh'])
         return self.num_shares() * cash_per_share
