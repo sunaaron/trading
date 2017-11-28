@@ -10,6 +10,7 @@ from tools import fetcher, parser, hydrator
 def fetch_all_symbols():
     """
     Fetch all symbols from the Finviz screen page and store them to screen.txt
+    Sector = Financial will not be included
     """
     screen_data = fetcher.fetch_screen_list_from_finviz(
                     constants.finviz_screen_url)
@@ -57,25 +58,20 @@ def gen_caption():
     caption_str += "Symbol" + "\t"
     caption_str += "Sector" + "\t"
     caption_str += "Industry" + "\t"
-    caption_str += "P/E" + "\t"
     caption_str += "Sales Per Employee (M)" + "\t"
     caption_str += "Profit Per Employee (M)" + "\t"
     caption_str += "Profit Margin" + "\t"
-    caption_str += "Cash Per Employee(M)" + "\t"
+    caption_str += "Cash (B)" + "\t"
     caption_str += "Dividend %" + "\t"
-    caption_str += "Perf YTD" + "\t"
+    caption_str += "P/E" + "\t"
+    caption_str += "Forward P/E" + "\t"
+    caption_str += "Perf Year" + "\t"
     caption_str += "Sales past 5Y" + "\t"
     caption_str += "Annual Sales Growth" + "\t"
     caption_str += "Annual Sales Growth Trend" + "\t"
     caption_str += "EPS past 5Y" + "\t"
     caption_str += "Annual Income Growth" + "\t"
     caption_str += "Annual Income Growth Trend" + "\t"
-    caption_str += "Sales Q/Q" + "\t"
-    caption_str += "Quarterly Sales Growth" + "\t"
-    caption_str += "Quarterly Sales Growth Trend" + "\t"
-    caption_str += "EPS Q/Q" + "\t"
-    caption_str += "Quarterly Income Growth" + "\t"
-    caption_str += "Quarterly Income Growth Trend" + "\t"
     return caption_str.rstrip("\t")
 
 def gen_row(symbol_obj):
@@ -83,25 +79,20 @@ def gen_row(symbol_obj):
     row_str += symbol_obj.symbol + "\t"
     row_str += symbol_obj.attr_dict["Sector"] + "\t"
     row_str += symbol_obj.attr_dict["Industry"] + "\t"
-    row_str += symbol_obj.attr_dict["P/E"] + "\t"
     row_str += symbol_obj.sales_per_employee_str() + "\t"
     row_str += symbol_obj.income_per_employee_str() + "\t"
     row_str += symbol_obj.attr_dict["Profit Margin"] + "\t"
-    row_str += symbol_obj.cash_per_employee_str() + "\t"
+    row_str += symbol_obj.cash_str() + "\t"
     row_str += symbol_obj.attr_dict["Dividend %"] + "\t"
-    row_str += symbol_obj.attr_dict["Perf YTD"] + "\t"
+    row_str += symbol_obj.attr_dict["P/E"] + "\t"
+    row_str += symbol_obj.attr_dict["Forward P/E"] + "\t"
+    row_str += symbol_obj.attr_dict["Perf Year"] + "\t"
     row_str += symbol_obj.attr_dict["Sales past 5Y"] + "\t"
     row_str += str(symbol_obj.annual_sales_growth()) + "\t"
     row_str += str(symbol_obj.annual_sales_growth_trend()) + "\t"
     row_str += symbol_obj.attr_dict["EPS past 5Y"] + "\t"
     row_str += str(symbol_obj.annual_income_growth()) + "\t"
     row_str += str(symbol_obj.annual_income_growth_trend()) + "\t"
-    row_str += symbol_obj.attr_dict["Sales Q/Q"] + "\t"
-    row_str += str(symbol_obj.quarterly_sales_growth()) + "\t"
-    row_str += str(symbol_obj.quarterly_sales_growth_trend()) + "\t"
-    row_str += symbol_obj.attr_dict["EPS Q/Q"] + "\t"
-    row_str += str(symbol_obj.quarterly_income_growth()) + "\t"
-    row_str += str(symbol_obj.quarterly_income_growth_trend()) + "\t"
     
     return row_str.rstrip("\t")
     

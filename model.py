@@ -90,6 +90,10 @@ class Symbol(object):
         num = num / 1000000
         return "%sM" % str(round(num, 2)) 
     
+    def __convert_B_value(self, num):
+        num = num / 1000000000
+        return "%sB" % str(round(num, 2))
+    
     def __convert_percent(self, float_value):
         return "{0:.1f}%".format(float_value*100)
     
@@ -211,6 +215,11 @@ class Symbol(object):
     def close_prices(self):
         return self.history_prices.close_prices()
     
+    def sector(self):
+        if self.screen_dict is not None:
+            return self.screen_dict["Sector"]
+        return self.attr_dict["Sector"]
+    
     def sales(self):
         return self.attr_dict['Sales']
     
@@ -247,6 +256,9 @@ class Symbol(object):
         cash_per_share = self.__convert_float_value(
                             self.attr_dict['Cash/sh'])
         return self.num_shares() * cash_per_share
+    
+    def cash_str(self):
+        return self.__convert_B_value(self.cash())
     
     def cash_per_employee(self):
         return self.cash()/self.num_of_employee()
@@ -309,4 +321,3 @@ class Symbol(object):
     def quarterly_income_growth_trend(self):
         return metric.slope(self.__gen_growth(
                     self.quarterly_incomes, as_percent=False))
-

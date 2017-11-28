@@ -7,7 +7,11 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 from ioutil import diskman
 from model import DailySummary, HistorySummary, Symbol
-from tools import fetcher
+
+def filter_financial_sector(symbol_lst):
+    filtered_symbol_lst = [symbol_obj for symbol_obj in symbol_lst 
+                           if symbol_obj.sector() != 'Financial']
+    return filtered_symbol_lst
 
 def process_screen_list_tr(tr):
     td_lst = tr.find_all('td', {'class': 'screener-body-table-nw'})
@@ -47,6 +51,7 @@ def parse_screen_list_from_finviz(raw_content):
     for tr in even_tr_lst:
         symbol_lst.append(process_screen_list_tr(tr))
     
+    symbol_lst = filter_financial_sector(symbol_lst)
     return symbol_lst
 
 def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
@@ -157,4 +162,3 @@ def parse_fund_watchlist_from_dropbox():
         symbol_lst.append(symbol_obj)
     return symbol_lst
 
-    
