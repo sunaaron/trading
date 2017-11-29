@@ -5,7 +5,12 @@ Created on Nov 24, 2017
 '''
 from context import constants
 from ioutil import diskman
-from tools import fetcher, parser, hydrator
+from tools import (
+                   fetcher, 
+                   filter, 
+                   hydrator, 
+                   parser,
+                   )
 
 def fetch_all_symbols():
     """
@@ -21,7 +26,7 @@ def fetch_all_symbols():
     for a in a_lst:
         screen_data = fetcher.fetch_screen_list_from_finviz(a)
         symbol_lst.extend(parser.parse_screen_list_from_finviz(screen_data))
-     
+    symbol_lst = filter.filter_financial_sector(symbol_lst)
     diskman.save_symbol_as_str(symbol_lst, "./data/screen.txt")
 
 def update_union_and_diff():

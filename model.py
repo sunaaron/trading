@@ -215,6 +215,12 @@ class Symbol(object):
     def close_prices(self):
         return self.history_prices.close_prices()
     
+    def change(self):
+        return float(self.attr_dict["Change"][:-1])
+    
+    def relative_volume(self):
+        return float(self.attr_dict["Rel Volume"])
+    
     def sector(self):
         if self.screen_dict is not None:
             return self.screen_dict["Sector"]
