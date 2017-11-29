@@ -106,9 +106,3 @@ def gen_table():
     for symbol_obj in symbol_lst:
         table_str += gen_row(symbol_obj) + "\n"
     diskman.save_screen_table(table_str)
-
-def screen_manually():
-    fetch_all_symbols()
-    update_union_and_diff()
-    hydrate_and_dump_diff_symbols()
-    gen_table()

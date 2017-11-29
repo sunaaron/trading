@@ -62,6 +62,7 @@ def load_symbols_by_pickle():
     path_lst = os.listdir("./data")
     pickle_paths = ["./data/%s" % p 
                     for p in path_lst if p.endswith(".pickle")]
+    pickle_paths.sort() # smaller paths are loaded first
     symbol_lst = []
     for path in pickle_paths:
         with open(path, "r") as f:
