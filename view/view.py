@@ -17,7 +17,6 @@ def track_fundlist():
     fetcher.fetch_watch_list_from_dropbox(constants.dropbox_fundlist_url)
     symbol_lst = parser.parse_fund_watchlist_from_dropbox()
     hydrator.hydrate_medium(symbol_lst)
-    symbol_lst = filter.filter_insignificant_change(symbol_lst)
     summary_str = mailman.gen_watchlist_fund_html(symbol_lst)
     mailman.send_email(mailman.gen_daily_watch_subject("fund"), 
                        summary_str)

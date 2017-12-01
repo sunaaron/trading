@@ -45,7 +45,7 @@ def gen_daily_screen_subject(symbol_lst):
             subject, len(symbol_lst))
 
 def gen_daily_watch_subject(watch_type):
-    return "Twice-Daily %s Watch List - %s" % (
+    return "Daily %s Watch List - %s" % (
             watch_type, dateutil.get_today_date())
 
 def gen_table_header():

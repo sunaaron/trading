@@ -8,6 +8,6 @@ from tools import dateutil
 
 if __name__ == '__main__':
     if dateutil.can_run():
-        view.screen_daily()
-        view.track_stocklist()
+#         view.screen_daily()
+#         view.track_stocklist()
         view.track_fundlist()
