@@ -291,9 +291,9 @@ class Symbol(object):
         return self.ma_diff
     
     def ma_diff_str(self):
-        if self.ma_diff >= 0 and self.ma_diff <= 0.0075:
+        if self.ma_diff >= 0 and self.ma_diff <= 0.01:
             return "<font color=\"green\">Good Buy</font>"
-        if self.ma_diff > 0.0075:
+        if self.ma_diff > 0.01:
             return "<font color=\"red\">Overbought</font>"
         return "<font color=\"orange\">Might be ok</font>"
 
