@@ -192,29 +192,35 @@ class Symbol(object):
         html_str = "%s (%s)" %(href_str, self.desc)
 
         html_str = "%s<br>%s: %s (%s)" %(html_str, 
-                                             "<b>Rsi</b>", 
-                                             self.rsi_value(), 
-                                             self.rsi_str())
+                                         "<b>Rsi</b>", 
+                                         self.rsi_value(), 
+                                         self.rsi_str())
         
         html_str = "%s<br>%s: %s (%s)" %(html_str, 
-                                                "<b>Ma_diff</b>", 
-                                                self.ma_diff_value(), 
-                                                self.ma_diff_str())
+                                         "<b>Ma_diff</b>", 
+                                         self.ma_diff_value(), 
+                                         self.ma_diff_str())
+        
         html_str = "%s<br>%s: %s" %(html_str, 
-                                        "<b>Perf Year</b>",
-                                        self.attr_dict['Perf Year'])
+                                    "<b>Perf Year</b>",
+                                    self.attr_dict['Perf Year'])
 
         html_str = "%s<br>%s: %s " %(html_str, 
-                                            "<b>Perf Half Y %</b>", 
-                                            self.attr_dict['Perf Half Y'])
+                                     "<b>Perf Half Y %</b>", 
+                                     self.attr_dict['Perf Half Y'])
 
         html_str = "%s<br>%s: %s" %(html_str, 
-                                        "<b>Perf Quarter</b>",
-                                        self.attr_dict['Perf Quarter'])
+                                    "<b>Perf Quarter</b>",
+                                    self.attr_dict['Perf Quarter'])
+        
+        html_str = "%s<br>%s: %s (%s)" %(html_str, 
+                                         "<b>Relative vol</b>", 
+                                         self.relative_volume(), 
+                                         self.relative_volume_str())
 
         html_str = "%s<br>%s: %s </td>" %(html_str, 
-                                            "<b>Dividend %</b>", 
-                                            self.attr_dict['Dividend %'])
+                                          "<b>Dividend %</b>", 
+                                          self.attr_dict['Dividend %'])
         
         img_src = constants.finviz_img_url % self.symbol
         html_str += '<td><img src=' + img_src
@@ -232,6 +238,13 @@ class Symbol(object):
     
     def relative_volume(self):
         return float(self.attr_dict["Rel Volume"])
+    
+    def relative_volume_str(self):
+        if self.relative_volume() > 1.2:
+            return "<font color=\"green\">Above average</font>"
+        if self.relative_volume() <= 1.2 and self.relative_volume() >= 0.8:
+            return "<font color=\"orange\">Average</font>"
+        return "<font color=\"red\">Low</font>"
     
     def sector(self):
         if self.screen_dict is not None:
