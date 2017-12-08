@@ -376,7 +376,7 @@ class Symbol(object):
     
     def perf_rate_str(self):
         perf_rate = self.perf_rate()
-        if perf_rate < 0:
+        if perf_rate < -0.1:
             return "<font color=\"red\">Slowing down</font>"
         if perf_rate > 0.1: 
             return "<font color=\"green\">Speeding up</font>"
