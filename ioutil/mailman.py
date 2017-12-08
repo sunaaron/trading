@@ -81,9 +81,14 @@ def gen_watchlist_stock_html(symbol_lst):
     return html_str
 
 def gen_watchlist_fund_html(symbol_lst):
+    symbol_tuple_lst = [((symbol_obj.perf_rate(), symbol_obj.relative_volume()), 
+                         symbol_obj) for symbol_obj in symbol_lst]
+    symbol_tuple_lst.sort(reverse=True)
+    sorted_symbol_lst = [tp[1] for tp in symbol_tuple_lst]
+    
     html_str = gen_table_header()
     
-    for symbol_obj in symbol_lst:
+    for symbol_obj in sorted_symbol_lst:
         html_str += symbol_obj.fund_watch_html_str()
     
     html_str += gen_table_footer()

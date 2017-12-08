@@ -229,7 +229,7 @@ class Symbol(object):
                                          self.relative_volume(), 
                                          self.relative_volume_str())
 
-        html_str = "%s<br>%s: %s </td>" %(html_str, 
+        html_str = "%s<br>%s: %s" %(html_str, 
                                           "<b>Dividend %</b>", 
                                           self.attr_dict['Dividend %'])
         
@@ -252,10 +252,10 @@ class Symbol(object):
     
     def relative_volume_str(self):
         if self.relative_volume() > 1.2:
-            return "<font color=\"green\">Above average</font>"
+            return "<font color=\"green\">Above Average</font>"
         if self.relative_volume() <= 1.2 and self.relative_volume() >= 0.8:
             return "<font color=\"orange\">Average</font>"
-        return "<font color=\"red\">Low</font>"
+        return "<font color=\"red\">Below Average</font>"
     
     def sector(self):
         if self.screen_dict is not None:
@@ -314,25 +314,27 @@ class Symbol(object):
         return self.rsi
     
     def rsi_str(self):
+        self.rsi_value()
         if self.rsi >= 70:
             return "<font color=\"red\">Overbought</font>"
         if self.rsi <= 30: 
             return "<font color=\"green\">Oversold</font>"
-        return "<font color=\"orange\">Might be ok</font>"
-        
+        return "<font color=\"orange\">Normal</font>"
+    
     def ma_diff_value(self):
         if self.ma_diff is None:
             self.ma_diff = metric.ma_diff_ratio(
                                 self.close_prices(), 13, 34)
         return self.ma_diff
-    
+
     def ma_diff_str(self):
-        if self.ma_diff >= 0 and self.ma_diff <= 0.01:
+        self.rsi_value()
+        if self.ma_diff >= -0.005 and self.ma_diff <= 0.01:
             return "<font color=\"green\">Good Buy</font>"
         if self.ma_diff > 0.01:
             return "<font color=\"red\">Overbought</font>"
         return "<font color=\"orange\">Negative</font>"
-
+    
     def annual_sales_growth(self):
         """
         These numbers might contain errors 
@@ -370,8 +372,12 @@ class Symbol(object):
         perf_quarter = self.__convert_float_value(self.attr_dict['Perf Quarter'])
         perf_month = self.__convert_float_value(self.attr_dict['Perf Month'])
        
-        weekly_perf = [perf_year/52, perf_half_year/26, 
-                       perf_quarter/13, perf_month/4.3]
+        weekly_perf = [
+                       metric.compound(perf_year/100, 52), 
+                       metric.compound(perf_half_year/100, 26),
+                       metric.compound(perf_quarter/100, 13),
+                       metric.compound(perf_month/100, 4.3),
+                       ]
         return metric.slope(weekly_perf)
     
     def perf_rate_str(self):
@@ -380,4 +386,4 @@ class Symbol(object):
             return "<font color=\"red\">Slowing down</font>"
         if perf_rate > 0.1: 
             return "<font color=\"green\">Speeding up</font>"
-        return "<font color=\"orange\">Normal but consistent</font>"
+        return "<font color=\"orange\">Consistent</font>"

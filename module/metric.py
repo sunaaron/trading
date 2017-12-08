@@ -4,6 +4,7 @@ Created on Nov 11, 2017
 @author: Aaron
 '''
 from scipy import stats
+import math
 import numpy as np
 
 def ma(values, window):
@@ -26,6 +27,14 @@ def slope(values):
     values_array = np.asarray(values)
     slope, _, _, _, _ = stats.linregress(x_array, values_array)
     return round(slope, 3)
+
+def compound(change, window):
+    """
+    (1+x)^window = 1+change. e.g. (1+x)^52 = 1.6, ask x
+    """
+    actual = 1 + change
+    x = math.pow(10, (math.log(actual, 10) / window)) - 1
+    return round(x, 3) * 100
 
 def ma_diff_ratio(values, window_1, window_2):
     """
