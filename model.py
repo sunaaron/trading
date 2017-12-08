@@ -83,6 +83,8 @@ class Symbol(object):
             value = float(value_str[:-1])
             unit = value_str[-1]
             return value * misc.get_multiplier(unit) * valueSign
+        elif value_str[-1] == '%':
+            return float(value_str[:-1]) * valueSign
         else:
             return float(value_str) * valueSign
     
@@ -212,6 +214,15 @@ class Symbol(object):
         html_str = "%s<br>%s: %s" %(html_str, 
                                     "<b>Perf Quarter</b>",
                                     self.attr_dict['Perf Quarter'])
+        
+        html_str = "%s<br>%s: %s" %(html_str, 
+                                    "<b>Perf Month</b>",
+                                    self.attr_dict['Perf Month'])
+        
+        html_str = "%s<br>%s: %s (%s)" %(html_str, 
+                                         "<b>Perf rate</b>",
+                                         self.perf_rate(), 
+                                         self.perf_rate_str())
         
         html_str = "%s<br>%s: %s (%s)" %(html_str, 
                                          "<b>Relative vol</b>", 
@@ -352,3 +363,21 @@ class Symbol(object):
     def quarterly_income_growth_trend(self):
         return metric.slope(self.__gen_growth(
                     self.quarterly_incomes, as_percent=False))
+
+    def perf_rate(self):
+        perf_year = self.__convert_float_value(self.attr_dict['Perf Year'])
+        perf_half_year = self.__convert_float_value(self.attr_dict['Perf Half Y'])
+        perf_quarter = self.__convert_float_value(self.attr_dict['Perf Quarter'])
+        perf_month = self.__convert_float_value(self.attr_dict['Perf Month'])
+       
+        weekly_perf = [perf_year/52, perf_half_year/26, 
+                       perf_quarter/13, perf_month/4.3]
+        return metric.slope(weekly_perf)
+    
+    def perf_rate_str(self):
+        perf_rate = self.perf_rate()
+        if perf_rate < 0:
+            return "<font color=\"red\">Slowing down</font>"
+        if perf_rate > 0.1: 
+            return "<font color=\"green\">Speeding up</font>"
+        return "<font color=\"orange\">Normal but consistent</font>"
