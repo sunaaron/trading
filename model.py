@@ -185,9 +185,9 @@ class Symbol(object):
         return html_str
     
     def fund_watch_html_str(self):
-        finviz_url = constants.finviz_quote_url % self.symbol
+        yahoo_url = constants.yahoo_holding_url % self.symbol
         href_str = '<tr><td valign=\"top\"><a href=\"%s\">%s</a>' % (
-                    finviz_url, self.symbol)
+                    yahoo_url, self.symbol)
         
         html_str = "%s (%s)" %(href_str, self.desc)
 
@@ -224,7 +224,7 @@ class Symbol(object):
         
         img_src = constants.finviz_img_url % self.symbol
         html_str += '<td><img src=' + img_src
-        html_str += ' width=\"60%\" height=\"60%\"/></td></tr>'
+        html_str += ' width=\"67%\" height=\"67%\"/></td></tr>'
         return html_str
 
     def open_prices(self):
