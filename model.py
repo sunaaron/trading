@@ -186,27 +186,39 @@ class Symbol(object):
     
     def fund_watch_html_str(self):
         finviz_url = constants.finviz_quote_url % self.symbol
-        href_str = '<tr><td><a href=\"%s\">%s</a>' % (
+        href_str = '<tr><td valign=\"top\"><a href=\"%s\">%s</a>' % (
                     finviz_url, self.symbol)
         
-        html_str = "%s (%s)</td></tr>" %(href_str, self.desc)
+        html_str = "%s (%s)" %(href_str, self.desc)
 
-        html_str = "%s<tr><td>%s: %s (%s)" %(html_str, 
+        html_str = "%s<br>%s: %s (%s)" %(html_str, 
                                              "<b>Rsi</b>", 
                                              self.rsi_value(), 
                                              self.rsi_str())
         
-        html_str = "%s %s: %s (%s)</td></tr>" %(html_str, 
+        html_str = "%s<br>%s: %s (%s)" %(html_str, 
                                                 "<b>Ma_diff</b>", 
                                                 self.ma_diff_value(), 
                                                 self.ma_diff_str())
-        html_str = "%s<tr><td>%s: %s" %(html_str, 
+        html_str = "%s<br>%s: %s" %(html_str, 
                                         "<b>Perf Year</b>",
                                         self.attr_dict['Perf Year'])
 
-        html_str = "%s %s: %s </td></tr>" %(html_str, 
+        html_str = "%s<br>%s: %s " %(html_str, 
+                                            "<b>Perf Half Y %</b>", 
+                                            self.attr_dict['Perf Half Y'])
+
+        html_str = "%s<br>%s: %s" %(html_str, 
+                                        "<b>Perf Quarter</b>",
+                                        self.attr_dict['Perf Quarter'])
+
+        html_str = "%s<br>%s: %s </td>" %(html_str, 
                                             "<b>Dividend %</b>", 
                                             self.attr_dict['Dividend %'])
+        
+        img_src = constants.finviz_img_url % self.symbol
+        html_str += '<td><img src=' + img_src
+        html_str += ' width=\"60%\" height=\"60%\"/></td></tr>'
         return html_str
 
     def open_prices(self):
@@ -281,7 +293,7 @@ class Symbol(object):
         if self.rsi >= 70:
             return "<font color=\"red\">Overbought</font>"
         if self.rsi <= 30: 
-            return "<font color=\"green\">Good Buy</font>"
+            return "<font color=\"green\">Oversold</font>"
         return "<font color=\"orange\">Might be ok</font>"
         
     def ma_diff_value(self):
@@ -295,7 +307,7 @@ class Symbol(object):
             return "<font color=\"green\">Good Buy</font>"
         if self.ma_diff > 0.01:
             return "<font color=\"red\">Overbought</font>"
-        return "<font color=\"orange\">Might be ok</font>"
+        return "<font color=\"orange\">Negative</font>"
 
     def annual_sales_growth(self):
         """

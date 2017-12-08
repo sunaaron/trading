@@ -85,7 +85,6 @@ def gen_watchlist_fund_html(symbol_lst):
     
     for symbol_obj in symbol_lst:
         html_str += symbol_obj.fund_watch_html_str()
-        html_str += gen_finviz_image_tr(symbol_obj.symbol)
     
     html_str += gen_table_footer()
     return html_str
