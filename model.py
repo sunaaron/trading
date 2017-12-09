@@ -187,7 +187,7 @@ class Symbol(object):
         return html_str
     
     def fund_watch_html_str(self):
-        yahoo_url = constants.yahoo_holding_url % self.symbol
+        yahoo_url = constants.yahoo_q_url % self.symbol
         href_str = '<tr><td valign=\"top\"><a href=\"%s\">%s</a>' % (
                     yahoo_url, self.symbol)
         
@@ -203,21 +203,15 @@ class Symbol(object):
                                          self.ma_diff_value(), 
                                          self.ma_diff_str())
         
-        html_str = "%s<br>%s: %s" %(html_str, 
-                                    "<b>Perf Year</b>",
-                                    self.attr_dict['Perf Year'])
+        html_str = "%s<br>%s: %s / %s" %(html_str, 
+                                         "<b>Perf Year / Half Y</b>",
+                                         self.attr_dict['Perf Year'], 
+                                         self.attr_dict['Perf Half Y'])
 
-        html_str = "%s<br>%s: %s " %(html_str, 
-                                     "<b>Perf Half Y %</b>", 
-                                     self.attr_dict['Perf Half Y'])
-
-        html_str = "%s<br>%s: %s" %(html_str, 
-                                    "<b>Perf Quarter</b>",
-                                    self.attr_dict['Perf Quarter'])
-        
-        html_str = "%s<br>%s: %s" %(html_str, 
-                                    "<b>Perf Month</b>",
-                                    self.attr_dict['Perf Month'])
+        html_str = "%s<br>%s: %s / %s" %(html_str, 
+                                         "<b>Perf Quarter / Month</b>",
+                                         self.attr_dict['Perf Quarter'], 
+                                         self.attr_dict['Perf Month'])
         
         html_str = "%s<br>%s: %s (%s)" %(html_str, 
                                          "<b>Perf rate</b>",
@@ -230,8 +224,8 @@ class Symbol(object):
                                          self.relative_volume_str())
 
         html_str = "%s<br>%s: %s" %(html_str, 
-                                          "<b>Dividend %</b>", 
-                                          self.attr_dict['Dividend %'])
+                                    "<b>Dividend %</b>", 
+                                    self.attr_dict['Dividend %'])
         
         img_src = constants.finviz_img_url % self.symbol
         html_str += '<td><img src=' + img_src

@@ -53,3 +53,7 @@ def hydrate_complete(symbol_lst):
     hydrate_with_historical_prices(symbol_lst)
     hydrate_with_annual_stmt(symbol_lst)
     hydrate_with_quarterly_stmt(symbol_lst)
+
+def hydrate_fund(symbol_lst):
+    hydrate_with_details(symbol_lst)
+    hydrate_with_historical_prices(symbol_lst)

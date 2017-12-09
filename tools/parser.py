@@ -95,6 +95,40 @@ def parse_stmt_from_mw(symbol_str, raw_content):
         income = [td.text for td in td_income if td.text != '-']
     return sales, income
 
+def parse_summary_from_yahoo(symbol_str, raw_content):
+    summary_dict = {}
+    trs = BeautifulSoup(raw_content, "html.parser").select('tr[class*="Bxz(bb)"]')
+    for tr in trs:
+        tds = tr.select("td")
+        name = tds[0].text
+        value = tds[1].text
+        summary_dict[name] = value
+    return summary_dict
+
+def parse_holdings_from_yahoo(symbol_str, raw_content):
+    holding_dict = {} 
+    divs = BeautifulSoup(raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
+    for div in divs:
+        spans = div.select("span")
+        attr = spans[0].text
+        value = spans[3].text
+        holding_dict[attr] = value
+    
+    holding_lst = []
+    trs = BeautifulSoup(raw_content, "html.parser").select('tr[class*="Ta(end)"]')
+    for tr in trs:
+        tds = tr.select("td")
+        if len(tds) == 0:
+            continue
+        name = tds[0].text
+        symbol = tds[1].text
+        percent = tds[2].text
+        holding_lst.append((name, symbol, percent))
+    
+    holding_dict['holdings'] = holding_lst
+    return holding_dict
+        
+
 def parse_historical_prices_from_yahoo(symbol_str, raw_content):
     """
     Close prices only

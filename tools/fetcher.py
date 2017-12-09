@@ -26,6 +26,14 @@ def fetch_symbol_details_from_finviz(symbol_str):
     url = constants.finviz_quote_url % symbol_str
     return urllib2.urlopen(url).read()
 
+def fetch_summary_from_yahoo(symbol_str):
+    hp_url = constants.yahoo_q_url % symbol_str
+    return urllib2.urlopen(hp_url).read()
+
+def fetch_holdings_from_yahoo(symbol_str):
+    hp_url = constants.yahoo_holdings_url % symbol_str
+    return urllib2.urlopen(hp_url).read()
+
 def fetch_historical_prices_from_yahoo(symbol_str):
     hp_url = constants.yahoo_hp_url % symbol_str
     return urllib2.urlopen(hp_url).read()
