@@ -315,7 +315,7 @@ class Symbol(object):
     
     def rsi_str(self):
         self.rsi_value()
-        if self.rsi >= 70:
+        if self.rsi >= 65:
             return "<font color=\"red\">Overbought</font>"
         if self.rsi <= 30: 
             return "<font color=\"green\">Oversold</font>"
@@ -324,7 +324,7 @@ class Symbol(object):
     def ma_diff_value(self):
         if self.ma_diff is None:
             self.ma_diff = metric.ma_diff_ratio(
-                                self.close_prices(), 13, 34)
+                                self.close_prices(), 20, 50)
         return self.ma_diff
 
     def ma_diff_str(self):
