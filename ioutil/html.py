@@ -40,7 +40,7 @@ def gen_holdings_td(holdings):
     return html_str
 
 def gen_perf_td(symbol_obj):
-    perf_dict = symbol_obj.fund_perf_dict
+    perf_dict = symbol_obj.perf_dict
     html_str = '<td align=\"left\" valign=\"top\">'
     for perf in perf_dict['yearly'][:6]:
         html_str += '<span style=\"width:25px;\">%s</span>: ' \

@@ -51,7 +51,7 @@ def parse_screen_list_from_finviz(raw_content):
 
     return symbol_lst
 
-def parse_attr_dict_from_finviz(symbol_str, raw_content):
+def parse_attr_dict_from_finviz(raw_content):
     """
     this function returns attr_dict
     """
@@ -74,7 +74,7 @@ def parse_attr_dict_from_finviz(symbol_str, raw_content):
     
     return attr_dict
     
-def parse_stmt_from_mw(symbol_str, raw_content):
+def parse_stmt_from_mw(raw_content):
     tr_sales = BeautifulSoup(raw_content, "html.parser").findAll(
                             "tr", {"class": "partialSum"})
     sales, income = [], []
@@ -89,9 +89,10 @@ def parse_stmt_from_mw(symbol_str, raw_content):
         income = [td.text for td in td_income if td.text != '-']
     return sales, income
 
-def parse_summary_from_yahoo(symbol_str, raw_content):
+def parse_summary_from_yahoo(raw_content):
     summary_dict = {}
-    trs = BeautifulSoup(raw_content, "html.parser").select('tr[class*="Bxz(bb)"]')
+    trs = BeautifulSoup(
+        raw_content, "html.parser").select('tr[class*="Bxz(bb)"]')
     for tr in trs:
         tds = tr.select("td")
         name = tds[0].text
@@ -99,9 +100,10 @@ def parse_summary_from_yahoo(symbol_str, raw_content):
         summary_dict[name] = value
     return summary_dict
 
-def parse_holdings_from_yahoo(symbol_str, raw_content):
+def parse_holdings_from_yahoo(raw_content):
     holding_dict = {} 
-    divs = BeautifulSoup(raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
+    divs = BeautifulSoup(
+        raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
     for div in divs:
         spans = div.select("span")
         attr = spans[0].text
@@ -109,7 +111,8 @@ def parse_holdings_from_yahoo(symbol_str, raw_content):
         holding_dict[attr] = value
     
     holding_lst = []
-    trs = BeautifulSoup(raw_content, "html.parser").select('tr[class*="Ta(end)"]')
+    trs = BeautifulSoup(
+        raw_content, "html.parser").select('tr[class*="Ta(end)"]')
     for tr in trs:
         tds = tr.select("td")
         if len(tds) == 0:
@@ -122,8 +125,9 @@ def parse_holdings_from_yahoo(symbol_str, raw_content):
     holding_dict['holdings'] = holding_lst
     return holding_dict
 
-def parse_perf_from_yahoo(symbol_str, raw_content):
-    divs = BeautifulSoup(raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
+def parse_perf_from_yahoo(raw_content):
+    divs = BeautifulSoup(
+        raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
     perf_dict = {}
     yearly_perf = []
     for div in divs:
@@ -139,6 +143,27 @@ def parse_perf_from_yahoo(symbol_str, raw_content):
             perf_dict['5-year'] = spans[3].text
     perf_dict['yearly'] = yearly_perf
     return perf_dict
+
+def parse_risk_from_yahoo(raw_content):
+    def parse_yr_risk(yr_div):
+        yr_spans = yr_div.select("span")
+        return (yr_spans[0].text, yr_spans[1].text)
+    
+    risk_dict = {}
+    divs = BeautifulSoup(
+        raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
+    for div in divs[1:]:
+        sub_divs = div.select("div")
+        name_div = sub_divs[0]
+        name_spans = name_div.select("span")
+        name = name_spans[0].text
+        risk_dict[name] = {}
+        
+        yr3_div, yr5_div, yr10_div = sub_divs[1:]
+        risk_dict[name]['3-year'] = parse_yr_risk(yr3_div)
+        risk_dict[name]['5-year'] = parse_yr_risk(yr5_div)
+        risk_dict[name]['10-year'] = parse_yr_risk(yr10_div)
+    return risk_dict
 
 def parse_historical_prices_from_yahoo(symbol_str, raw_content):
     """
@@ -164,8 +189,7 @@ def parse_historical_prices_from_yahoo(symbol_str, raw_content):
             d_sums=data[::-1]
             )
 
-
-def parse_historical_prices_from_pandas(symbol, pandas_data):
+def parse_historical_prices_from_pandas(symbol_str, pandas_data):
     date_lst = pandas_data.index.to_pydatetime().tolist()
     open_lst = pandas_data['Open'].values.tolist()
     close_lst = pandas_data['Close'].values.tolist()
@@ -182,7 +206,7 @@ def parse_historical_prices_from_pandas(symbol, pandas_data):
         data.append(d_summary)
     
     return HistorySummary(
-            symbol=symbol,
+            symbol=symbol_str,
             d_sums=data
             )
     
