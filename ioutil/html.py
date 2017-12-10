@@ -49,9 +49,9 @@ def gen_perf_td(symbol_obj):
         html_str += '<br>'
     
     yrt_3 = perf_dict['3-year']
-    html_str = "%s%s: %s" %(html_str, 
-                            "3-YR",
-                            symbol_obj.yearly_return_str(yrt_3)) 
+    html_str = "%s<br>%s: %s" %(html_str, 
+                                "3-YR",
+                                symbol_obj.yearly_return_str(yrt_3)) 
     yrt_5 = perf_dict['5-year']
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "5-YR", 

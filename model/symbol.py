@@ -139,6 +139,6 @@ class Symbol(object):
         value = misc.to_float_value(value_str)
         if value >= 10:
             return html.green(value_str)
-        if value >= 5:
+        if value >= 3:
             return html.orange(value_str)
         return html.red(value_str)
