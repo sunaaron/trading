@@ -186,8 +186,8 @@ def parse_fund_watchlist_from_dropbox():
     symbol_lst = []
     for line in watchlist_file:
         line_lst = line.split('-')
-        symbol_str = line_lst[0].rstrip(' ')
-        symbol_desc = line_lst[1].lstrip(' ')
+        symbol_str = line_lst[0].strip(' ')
+        symbol_desc = line_lst[1].strip(' ')
         symbol_obj = FundSymbol(symbol_str)
         symbol_obj.desc = symbol_desc
         symbol_lst.append(symbol_obj)
