@@ -47,7 +47,7 @@ class FundSymbol(Symbol):
     
     def fund_pe_str(self):
         pe = self.fund_pe()
-        pe_str = self.holdings_dict['Price/Earnings']
+        pe_str = self.holdings_dict.get('Price/Earnings', 'N/A')
         if pe == 'N/A':
             return html.orange(pe)
         if pe >= 50:
@@ -62,15 +62,21 @@ class FundSymbol(Symbol):
     def fund_perf(self, tp):
         if tp in self.perf_dict:
             return self.perf_dict[tp][0]
-        return ""
+        return 'N/A'
 
     def fund_perf_category(self, tp):
         if tp in self.perf_dict:    
             return self.perf_dict[tp][1]
-        return ""
+        return 'N/A'
     
     def three_year_beta(self):
-        return self.risk_dict['Beta']['3-year'][0]
+        if 'Beta' in self.risk_dict:
+            if '3-year' in self.risk_dict['Beta']:
+                return self.risk_dict['Beta']['3-year'][0]
+        return 'N/A'
    
     def three_year_beta_category(self):
-        return self.risk_dict['Beta']['3-year'][1]
+        if 'Beta' in self.risk_dict:
+            if '3-year' in self.risk_dict['Beta']:
+                return self.risk_dict['Beta']['3-year'][1]
+        return 'N/A'

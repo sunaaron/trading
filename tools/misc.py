@@ -5,6 +5,8 @@ Created on Nov 11, 2017
 '''
 import datetime
 import json
+import logging
+
 
 from context import constants
 
@@ -59,3 +61,18 @@ def timer(func):
     func()
     end_tm = datetime.datetime.now()
     return "Completed in %d seconds" % (end_tm - start_tm).seconds
+
+def logger():
+    logger = logging.getLogger('trading')
+    logger.setLevel(logging.DEBUG)
+    # create console handler
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.DEBUG)
+
+    # create formatter and add it to the handlers
+    formatter = logging.Formatter('%(asctime)s - \
+        %(name)s - %(levelname)s - %(message)s')
+    ch.setFormatter(formatter)
+    # add the handlers to logger
+    logger.addHandler(ch)
+    return logger

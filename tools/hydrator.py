@@ -5,9 +5,12 @@ Created on Nov 24, 2017
 '''
 from ioutil import diskman
 from tools import fetcher, parser, filter
+from tools.misc import logger
 
+logger = logger()
 
 def hydrate_with_details(symbol_lst):
+    logger.info("Running hydrate_with_details")
     symbol_details_dict = fetcher.fetch_batch(symbol_lst, 
                             fetcher.fetch_symbol_details_from_finviz)
     for symbol_obj in symbol_lst:
@@ -16,6 +19,7 @@ def hydrate_with_details(symbol_lst):
                                     symbol_details_dict[symbol_str])
 
 def hydrate_with_historical_prices(symbol_lst):
+    logger.info("Running hydrate_with_historical_prices")
     symbol_hp_dict = fetcher.fetch_batch(symbol_lst,
                         fetcher.fetch_historical_prices_from_pandas)
     for symbol_obj in symbol_lst:
@@ -24,6 +28,7 @@ def hydrate_with_historical_prices(symbol_lst):
                                 symbol_str, symbol_hp_dict[symbol_str])
 
 def hydrate_with_fund_summary(symbol_lst):
+    logger.info("Running hydrate_with_fund_summary")
     # We only use expense ratio in fund summary, so we cache them
     filtered_symbol_lst = filter.filter_local_existent(symbol_lst)
     local_symbol_dict = diskman.load_symbol_dict_by_pickle()
@@ -39,6 +44,7 @@ def hydrate_with_fund_summary(symbol_lst):
                 symbol_summary_dict[symbol_str])
         
 def hydrate_with_fund_holdings(symbol_lst):
+    logger.info("Running hydrate_with_fund_holdings")
     symbol_holdings_dict = fetcher.fetch_batch(symbol_lst,
                                 fetcher.fetch_holdings_from_yahoo)
     for symbol_obj in symbol_lst:
@@ -47,6 +53,7 @@ def hydrate_with_fund_holdings(symbol_lst):
                                 symbol_holdings_dict[symbol_str])
 
 def hydrate_with_fund_perf(symbol_lst):
+    logger.info("Running hydrate_with_fund_perf")
     # We only use past five years's perf in fund perf, so we cache them
     filtered_symbol_lst = filter.filter_local_existent(symbol_lst)
     local_symbol_dict = diskman.load_symbol_dict_by_pickle()
@@ -62,6 +69,7 @@ def hydrate_with_fund_perf(symbol_lst):
                 symbol_perf_dict[symbol_str])
             
 def hydrate_with_fund_risk(symbol_lst):
+    logger.info("Running hydrate_with_fund_risk")
     # We only use past years's alpha,beta in fund perf, so we cache them
     filtered_symbol_lst = filter.filter_local_existent(symbol_lst)
     local_symbol_dict = diskman.load_symbol_dict_by_pickle()
@@ -77,6 +85,7 @@ def hydrate_with_fund_risk(symbol_lst):
                 symbol_risk_dict[symbol_str])
             
 def hydrate_with_annual_stmt(symbol_lst):
+    logger.info("Running hydrate_with_annual_stmt")
     symbol_annual_dict = fetcher.fetch_batch(symbol_lst, 
                             fetcher.fetch_annual_stmt_from_mw)
     for symbol_obj in symbol_lst:
@@ -86,7 +95,8 @@ def hydrate_with_annual_stmt(symbol_lst):
         symbol_obj.annual_sales = res[0]
         symbol_obj.annual_incomes = res[1]
         
-def hydrate_with_quarterly_stmt(symbol_lst):        
+def hydrate_with_quarterly_stmt(symbol_lst):
+    logger.info("Running hydrate_with_quarterly_stmt") 
     symbol_quarterly_dict = fetcher.fetch_batch(symbol_lst, 
                             fetcher.fetch_quarterly_stmt_from_mw)
     for symbol_obj in symbol_lst:
@@ -110,6 +120,8 @@ def hydrate_complete(symbol_lst):
     hydrate_with_quarterly_stmt(symbol_lst)
 
 def hydrate_fund(symbol_lst):
+    logger.info("Running hydrate_fund, hydrating %d \
+        symbols" % len(symbol_lst))
     hydrate_with_details(symbol_lst)
     hydrate_with_historical_prices(symbol_lst)
     hydrate_with_fund_summary(symbol_lst)

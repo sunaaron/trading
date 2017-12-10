@@ -144,6 +144,8 @@ class Symbol(object):
         return html.red(value_str)
 
     def beta_str(self, value_str):
+        if value_str == 'N/A':
+            return value_str
         value = misc.to_float_value(value_str)
         if value >= 1.25:
             return html.red(value_str)
