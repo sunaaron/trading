@@ -12,6 +12,7 @@ import urllib2
 
 from context import constants
 from tools import misc
+from tools.misc import retry
  
 from pandas_datareader import data, wb
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
@@ -26,18 +27,22 @@ def fetch_symbol_details_from_finviz(symbol_str):
     url = constants.finviz_quote_url % symbol_str
     return urllib2.urlopen(url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_summary_from_yahoo(symbol_str):
     hp_url = constants.yahoo_q_url % symbol_str
     return urllib2.urlopen(hp_url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_holdings_from_yahoo(symbol_str):
     hp_url = constants.yahoo_holdings_url % symbol_str
     return urllib2.urlopen(hp_url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_perf_from_yahoo(symbol_str):
     hp_url = constants.yahoo_perf_url % symbol_str
     return urllib2.urlopen(hp_url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_risk_from_yahoo(symbol_str):
     hp_url = constants.yahoo_risk_url % symbol_str
     return urllib2.urlopen(hp_url).read()
@@ -71,10 +76,8 @@ def fetch_and_store(symbol_str, symbol_dict, func):
     
 def fetch_batch(symbol_lst, func):
     symbol_dict = {}
-    batch_size = int(conf['fetch_batch_size'])
 
     thread_lst = []
-    count = 0
     for symbol_obj in symbol_lst:
         t = Thread(target = fetch_and_store, 
                    args = (symbol_obj.symbol, 
@@ -83,9 +86,6 @@ def fetch_batch(symbol_lst, func):
                            ))
         thread_lst.append(t)
         t.start()
-        count += 1
-        if batch_size > 0 and count % batch_size == 0:
-            time.sleep(2)
  
     for t in thread_lst:
         t.join()    

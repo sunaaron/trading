@@ -3,6 +3,8 @@ Created on Nov 24, 2017
 
 @author: Aaron
 '''
+import time
+
 from ioutil import diskman
 from tools import fetcher, parser, filter
 from tools.misc import logger
@@ -120,8 +122,8 @@ def hydrate_complete(symbol_lst):
     hydrate_with_quarterly_stmt(symbol_lst)
 
 def hydrate_fund(symbol_lst):
-    logger.info("Running hydrate_fund, hydrating %d \
-        symbols" % len(symbol_lst))
+    logger.info("Running hydrate_fund, hydrating %d symbols from %s" % (
+        len(symbol_lst), symbol_lst[0].symbol))
     hydrate_with_details(symbol_lst)
     hydrate_with_historical_prices(symbol_lst)
     hydrate_with_fund_summary(symbol_lst)
@@ -129,3 +131,12 @@ def hydrate_fund(symbol_lst):
     hydrate_with_fund_perf(symbol_lst)
     hydrate_with_fund_risk(symbol_lst)
     diskman.dump_symbol_dict_by_pickle(symbol_lst)
+
+def batch_hydrate(symbol_lst, hydrate_func, batch_size=7):
+    batch_symbols = []
+    for i in xrange(len(symbol_lst)):
+        batch_symbols.append(symbol_lst[i])
+        if (i+1)%batch_size == 0 or i == len(symbol_lst)-1:
+            hydrate_func(batch_symbols)
+            time.sleep(2)
+            batch_symbols = []
