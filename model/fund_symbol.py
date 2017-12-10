@@ -27,7 +27,7 @@ class FundSymbol(Symbol):
         self.risk_dict = None
 
     def expense_ratio(self):
-        return self.summary_dict['Expense Ratio (net)']
+        return self.summary_dict.get('Expense Ratio (net)', 'N/A')
     
     def expense_ratio_str(self):
         exp_ratio = self.expense_ratio()
@@ -60,7 +60,7 @@ class FundSymbol(Symbol):
         return html.green(pe_str)
     
     def holdings(self):
-        return self.holdings_dict['holdings']
+        return self.holdings_dict.get('holdings', [])
     
     def fund_perf(self, tp):
         if tp in self.perf_dict:
