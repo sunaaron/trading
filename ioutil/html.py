@@ -28,31 +28,19 @@ def gen_finviz_image_td(symbol_str):
     html_str += ' style=\"width:400px; height:auto;\"/></td>'
     return html_str  
 
-def gen_holdings_td(holdings):
-    if len(holdings) == 0:
-        return ''
-    html_str = '<td align=\"left\" valign=\"top\">'
-    for holding in holdings:
-        html_str += '<span style=\"width:25px;\">%s</span>: ' % holding[1]
-        html_str += '<span>%s</span>' % holding[2]
-        html_str += '<br>'
-    html_str += '</td>'
-    return html_str
-
 def gen_perf_td(symbol_obj):
     html_str = '<td align=\"left\" valign=\"top\">'
     for tp in ('2017', '2016', '2015', 
                  '2014', '2013', '2012', 
                  '1-Year', '3-Year', '5-Year'):
         perf_str = symbol_obj.fund_perf(tp)
-        if perf_str != "":
-            perf_ca_str = symbol_obj.fund_perf_category(tp)
-            html_str += '<span style=\"width:25px;\">%s</span>: ' \
-                        % tp
-            
-            html_str += symbol_obj.yearly_perf_str(perf_str)
-            html_str += ' / ' + symbol_obj.yearly_perf_str(perf_ca_str)
-            html_str += '<br>'
+        perf_ca_str = symbol_obj.fund_perf_category(tp)
+        html_str += '<span style=\"width:25px;\">%s</span>: ' \
+                    % tp
+        
+        html_str += symbol_obj.yearly_perf_str(perf_str)
+        html_str += ' / ' + symbol_obj.yearly_perf_str(perf_ca_str)
+        html_str += '<br>'
     
     html_str += '</td>'
     return html_str

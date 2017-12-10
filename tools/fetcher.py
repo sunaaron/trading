@@ -20,9 +20,11 @@ from subprocess import call
 
 conf = misc.get_conf()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_screen_list_from_finviz(finviz_screen_url):
     return urllib2.urlopen(finviz_screen_url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_symbol_details_from_finviz(symbol_str):
     url = constants.finviz_quote_url % symbol_str
     return urllib2.urlopen(url).read()
@@ -47,6 +49,7 @@ def fetch_risk_from_yahoo(symbol_str):
     hp_url = constants.yahoo_risk_url % symbol_str
     return urllib2.urlopen(hp_url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_historical_prices_from_yahoo(symbol_str):
     hp_url = constants.yahoo_hp_url % symbol_str
     return urllib2.urlopen(hp_url).read()
@@ -63,10 +66,12 @@ def fetch_watch_list_from_dropbox(dropbox_url):
         os.unlink(basename)
     call(["wget", dropbox_url])
     
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_annual_stmt_from_mw(symbol_str):
     url = constants.mw_annual_url % symbol_str
     return urllib2.urlopen(url).read()
 
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_quarterly_stmt_from_mw(symbol_str):
     url = constants.mw_quarterly_url % symbol_str
     return urllib2.urlopen(url).read()
