@@ -30,10 +30,13 @@ class FundSymbol(Symbol):
         return self.summary_dict['Expense Ratio (net)']
     
     def expense_ratio_str(self):
-        expense_ratio = misc.to_float_value(self.expense_ratio())
+        exp_ratio = self.expense_ratio()
+        if exp_ratio == 'N/A':
+            return html.orange(exp_ratio)
+        expense_ratio = misc.to_float_value(exp_ratio)
         if expense_ratio >= 0.5:
-            return html.red(self.expense_ratio())
-        return html.green(self.expense_ratio())
+            return html.red(exp_ratio)
+        return html.green(exp_ratio)
     
     def net_assets(self):
         return self.summary_dict['Net Assets']

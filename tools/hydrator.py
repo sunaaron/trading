@@ -130,7 +130,6 @@ def hydrate_fund(symbol_lst):
     hydrate_with_fund_holdings(symbol_lst)
     hydrate_with_fund_perf(symbol_lst)
     hydrate_with_fund_risk(symbol_lst)
-    diskman.dump_symbol_dict_by_pickle(symbol_lst)
 
 def batch_hydrate(symbol_lst, hydrate_func, batch_size=7):
     batch_symbols = []
@@ -140,3 +139,5 @@ def batch_hydrate(symbol_lst, hydrate_func, batch_size=7):
             hydrate_func(batch_symbols)
             time.sleep(2)
             batch_symbols = []
+    diskman.dump_symbol_dict_by_pickle(symbol_lst)
+
