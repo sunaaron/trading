@@ -62,7 +62,7 @@ def gen_perf_td(symbol_obj):
     
 def fund_watch_html_str(symbol_obj):
     yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol
-    html_str = '<tr><td align=\"left\" valign=\"top\" width=\"33%\">'
+    html_str = '<tr><td align=\"left\" valign=\"top\" width=\"27%\">'
     html_str = '%s<a href=\"%s\">%s</a>' % (html_str, 
                                             yahoo_url, 
                                             symbol_obj.symbol)

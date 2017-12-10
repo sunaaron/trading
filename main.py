@@ -10,4 +10,4 @@ from tools import dateutil
 
 if __name__ == '__main__':
     if dateutil.can_run():
-        misc.timer(view.track_fundlist)
+        print misc.timer(view.track_fundlist)
