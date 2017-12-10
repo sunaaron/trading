@@ -49,6 +49,16 @@ class Symbol(object):
         self.rsi = None
         self.ma_diff = None
 
+    def to_dict(self):
+        symbol_dict = {}
+        for attr in self.dict_attrs:
+            symbol_dict[attr] = self.__getattribute__(attr)
+        return symbol_dict
+    
+    def from_dict(self, symbol_dict):
+        for attr in self.dict_attrs:
+            self.__setattr__(attr, symbol_dict[attr])
+
     def open_prices(self):
         return self.history_prices.open_prices()
         
@@ -62,11 +72,12 @@ class Symbol(object):
         return float(self.attr_dict["Rel Volume"])
     
     def relative_volume_str(self):
-        if self.relative_volume() > 1.2:
-            return html.green("Above Average")
-        if self.relative_volume() <= 1.2 and self.relative_volume() >= 0.8:
-            return html.orange("Average")
-        return html.red("Below Average")
+        rel_vol = self.relative_volume()
+        if rel_vol > 1.2:
+            return html.green(rel_vol)
+        if rel_vol <= 1.2 and rel_vol >= 0.8:
+            return html.orange(rel_vol)
+        return html.red(rel_vol)
     
     def sector(self):
         if self.screen_dict is not None:
@@ -81,10 +92,10 @@ class Symbol(object):
     def rsi_str(self):
         self.rsi_value()
         if self.rsi >= 65:
-            return html.red("Overbought")
+            return html.red(self.rsi)
         if self.rsi <= 30:
-            return html.green("Oversold")
-        return html.orange("Normal")
+            return html.green(self.rsi)
+        return html.orange(self.rsi)
     
     def ma_diff_value(self):
         if self.ma_diff is None:
@@ -93,12 +104,12 @@ class Symbol(object):
         return self.ma_diff
 
     def ma_diff_str(self):
-        self.rsi_value()
+        self.ma_diff_value()
         if self.ma_diff >= -0.005 and self.ma_diff <= 0.01:
-            return html.green("Good Buy")
+            return html.green(self.ma_diff)
         if self.ma_diff > 0.01:
-            return html.red("Overbought")
-        return html.orange("Negative")
+            return html.red(self.ma_diff)
+        return html.orange(self.ma_diff)
     
     def perf_rate(self):
         perf_year = misc.to_float_value(self.attr_dict['Perf Year'])
@@ -117,7 +128,17 @@ class Symbol(object):
     def perf_rate_str(self):
         perf_rate = self.perf_rate()
         if perf_rate < -0.1:
-            return html.red("Slowing down")
+            return html.red(perf_rate)
         if perf_rate > 0.1:
-            return html.green("Speeding up")
-        return html.orange("Consistent")
+            return html.green(perf_rate)
+        return html.orange(perf_rate)
+    
+    def yearly_return_str(self, value_str):
+        if value_str == 'N/A':
+            return value_str
+        value = misc.to_float_value(value_str)
+        if value >= 10:
+            return html.green(value_str)
+        if value >= 5:
+            return html.orange(value_str)
+        return html.red(value_str)

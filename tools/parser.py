@@ -9,7 +9,6 @@ from ioutil import diskman
 from model.symbol import DailySummary, HistorySummary
 from model.stock_symbol import StockSymbol
 from model.fund_symbol import FundSymbol
-from model.factory import gen_symbol_obj
 
 def process_screen_list_tr(tr):
     td_lst = tr.find_all('td', {'class': 'screener-body-table-nw'})
@@ -52,7 +51,7 @@ def parse_screen_list_from_finviz(raw_content):
 
     return symbol_lst
 
-def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
+def parse_attr_dict_from_finviz(symbol_str, raw_content):
     """
     this function returns attr_dict
     """
@@ -75,15 +74,6 @@ def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
     
     return attr_dict
     
-def parse_symbol_details_from_finviz(symbol_str, symbol_type, raw_content):
-    """
-    this function returns a Symbol object directly
-    """
-    attr_dict = parse_symbol_attr_dict_from_finviz(symbol_str, raw_content)
-    symbol_obj = gen_symbol_obj(symbol_str, symbol_type)
-    symbol_obj.attr_dict = attr_dict
-    return symbol_obj
-
 def parse_stmt_from_mw(symbol_str, raw_content):
     tr_sales = BeautifulSoup(raw_content, "html.parser").findAll(
                             "tr", {"class": "partialSum"})
@@ -131,6 +121,24 @@ def parse_holdings_from_yahoo(symbol_str, raw_content):
     
     holding_dict['holdings'] = holding_lst
     return holding_dict
+
+def parse_perf_from_yahoo(symbol_str, raw_content):
+    divs = BeautifulSoup(raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
+    perf_dict = {}
+    yearly_perf = []
+    for div in divs:
+        spans = div.select("span")
+        first_col = spans[0].text
+        if first_col.startswith('201'):
+            year = first_col
+            change = spans[2].text
+            yearly_perf.append((year, change))
+        if first_col.startswith('3-Year'):
+            perf_dict['3-year'] = spans[3].text 
+        if first_col.startswith('5-Year'):
+            perf_dict['5-year'] = spans[3].text
+    perf_dict['yearly'] = yearly_perf
+    return perf_dict
 
 def parse_historical_prices_from_yahoo(symbol_str, raw_content):
     """

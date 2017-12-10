@@ -34,6 +34,10 @@ def fetch_holdings_from_yahoo(symbol_str):
     hp_url = constants.yahoo_holdings_url % symbol_str
     return urllib2.urlopen(hp_url).read()
 
+def fetch_perf_from_yahoo(symbol_str):
+    hp_url = constants.yahoo_perf_url % symbol_str
+    return urllib2.urlopen(hp_url).read()
+
 def fetch_historical_prices_from_yahoo(symbol_str):
     hp_url = constants.yahoo_hp_url % symbol_str
     return urllib2.urlopen(hp_url).read()

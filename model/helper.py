@@ -3,8 +3,8 @@ Created on Dec 9, 2017
 
 @author: Aaron
 '''
-from stock_symbol import StockSymbol
 from fund_symbol import FundSymbol
+from stock_symbol import StockSymbol
 
 
 def gen_symbol_obj(symbol_str, symbol_type):

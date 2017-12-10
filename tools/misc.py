@@ -3,8 +3,10 @@ Created on Nov 11, 2017
 
 @author: Aaron
 '''
-from context import constants
+import datetime
 import json
+
+from context import constants
 
 def get_conf():
     with open ("./conf.json", "r") as f:
@@ -51,3 +53,9 @@ def build_finviz_screen_movement_url():
     # trend going up
     url_lst.insert(-2, "ta_change_u")
     return ",".join(url_lst)
+
+def timer(func):
+    start_tm = datetime.datetime.now()
+    func()
+    end_tm = datetime.datetime.now()
+    return "Completed in %d seconds" % (end_tm - start_tm).seconds

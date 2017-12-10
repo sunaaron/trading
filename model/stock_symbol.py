@@ -9,30 +9,22 @@ from tools import misc
 
 class StockSymbol(Symbol):
     dict_attrs = [
-                  "symbol", "desc",
-                  "screen_dict", "attr_dict", "history_prices", 
+                  "symbol", "symbol_type",
+                  "screen_dict", "attr_dict", 
+                  "rsi", "ma_diff",  
                   "annual_sales", "annual_incomes", 
                   "quarterly_sales", "quarterly_incomes",
                   ]
 
     def __init__(self, symbol):
         super(StockSymbol, self).__init__(symbol)
+        self.symbol_type = "stock"
         self.screen_dict = None
 
         self.annual_sales = None
         self.quarterly_sales = None
         self.annual_incomes = None
         self.quarterly_incomes = None
-        
-    def to_dict(self):
-        symbol_dict = {}
-        for attr in self.dict_attrs:
-            symbol_dict[attr] = self.__getattribute__(attr)
-        return symbol_dict
-    
-    def from_dict(self, symbol_dict):
-        for attr in self.dict_attrs:
-            self.__setattr__(attr, symbol_dict[attr])
         
     def __gen_growth(self, value_lst, as_percent=True):
         growth = []

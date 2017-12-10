@@ -7,7 +7,8 @@ import os
 import pickle
 
 from tools import dateutil
-from model.symbol import Symbol
+from model.stock_symbol import StockSymbol
+from model import helper
 
 def get_year_month_path():
     year_month_str = dateutil.get_year_month()
@@ -37,7 +38,7 @@ def save_symbol_set_as_str(symbol_set, path):
 def load_symbol_as_object(path):
     symbol_file = open(path, "r")
     symbol_strs = symbol_file.read().split("\n")
-    return [Symbol(symbol_str.rstrip('\r')) for symbol_str in symbol_strs]
+    return [StockSymbol(symbol_str.rstrip('\r')) for symbol_str in symbol_strs]
 
 def load_symbol_as_str(path):
     symbol_file = open(path, "r")
@@ -57,8 +58,8 @@ def dump_symbol_dict_by_pickle(symbol_lst):
     with open(path, "w") as f:
         pickle.dump(symbol_dict, f) 
     f.close()
-    
-def load_symbols_by_pickle():
+
+def load_symbol_lst_by_pickle():
     path_lst = os.listdir("./data")
     pickle_paths = ["./data/%s" % p 
                     for p in path_lst if p.endswith(".pickle")]
@@ -69,10 +70,16 @@ def load_symbols_by_pickle():
             cur_dict = pickle.load(f)
         f.close()
         for cur_symbol_str in cur_dict:
-            symbol_obj = Symbol(symbol=cur_symbol_str)
+            symbol_type = cur_dict[cur_symbol_str]['symbol_type']
+            symbol_obj = helper.gen_symbol_obj(
+                            cur_symbol_str, symbol_type)
             symbol_obj.from_dict(cur_dict[cur_symbol_str])
             symbol_lst.append(symbol_obj)
     return symbol_lst
+
+def load_symbol_dict_by_pickle():
+    symbol_lst = load_symbol_lst_by_pickle()
+    return {symbol_obj.symbol: symbol_obj for symbol_obj in symbol_lst}
 
 def save_screen_table(table_str):
     with open("./data/table.txt", "w") as f:

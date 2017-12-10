@@ -13,6 +13,7 @@ finviz_screen_url = "https://finviz.com/screener.ashx?v=111&f=cap_midover,fa_eps
 yahoo_q_url = "https://finance.yahoo.com/quote/%s"
 yahoo_holdings_url = "https://finance.yahoo.com/quote/%s/holdings/"
 yahoo_hp_url =  "https://finance.yahoo.com/quote/%s/history/"
+yahoo_perf_url = "https://finance.yahoo.com/quote/%s/performance/"
 
 dropbox_stocklist_url = "https://www.dropbox.com/s/efo19cicf604oxl/stock.txt"
 dropbox_fundlist_url = "https://www.dropbox.com/s/t7wfkzq85u13c43/fund.txt"
