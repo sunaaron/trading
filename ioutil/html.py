@@ -30,9 +30,9 @@ def gen_finviz_image_td(symbol_str):
 
 def gen_perf_td(symbol_obj):
     html_str = '<td align=\"left\" valign=\"top\">'
-    for tp in ('2017', '2016', '2015', 
-                 '2014', '2013', '2012', 
-                 '1-Year', '3-Year', '5-Year'):
+    for tp in ('1-Year', '3-Year', '5-Year', 
+                 '2017', '2016', '2015',
+                 '2014', '2013', '2012'):
         perf_str = symbol_obj.fund_perf(tp)
         perf_ca_str = symbol_obj.fund_perf_category(tp)
         html_str += '<span style=\"width:25px;\">%s</span>: ' \
@@ -41,6 +41,8 @@ def gen_perf_td(symbol_obj):
         html_str += symbol_obj.yearly_perf_str(perf_str)
         html_str += ' / ' + symbol_obj.yearly_perf_str(perf_ca_str)
         html_str += '<br>'
+        if tp == '5-Year':
+            html_str += '<br>'
     
     html_str += '</td>'
     return html_str
