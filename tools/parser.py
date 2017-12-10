@@ -6,7 +6,10 @@ Created on Nov 10, 2017
 from bs4 import BeautifulSoup
 from datetime import datetime
 from ioutil import diskman
-from model import DailySummary, HistorySummary, Symbol
+from model.symbol import DailySummary, HistorySummary
+from model.stock_symbol import StockSymbol
+from model.fund_symbol import FundSymbol
+from model.factory import gen_symbol_obj
 
 def process_screen_list_tr(tr):
     td_lst = tr.find_all('td', {'class': 'screener-body-table-nw'})
@@ -25,7 +28,8 @@ def process_screen_list_tr(tr):
                    'Change': change, 
                    'Volume': volume,
                    }
-    symbol_obj = Symbol(symbol=symbol)
+    # screen is only used for StockSymbol
+    symbol_obj = StockSymbol(symbol=symbol)
     symbol_obj.screen_dict = screen_dict
     return symbol_obj 
 
@@ -71,12 +75,12 @@ def parse_symbol_attr_dict_from_finviz(symbol_str, raw_content):
     
     return attr_dict
     
-def parse_symbol_details_from_finviz(symbol_str, raw_content):
+def parse_symbol_details_from_finviz(symbol_str, symbol_type, raw_content):
     """
     this function returns a Symbol object directly
     """
     attr_dict = parse_symbol_attr_dict_from_finviz(symbol_str, raw_content)
-    symbol_obj = Symbol(symbol=symbol_str)
+    symbol_obj = gen_symbol_obj(symbol_str, symbol_type)
     symbol_obj.attr_dict = attr_dict
     return symbol_obj
 
@@ -127,7 +131,6 @@ def parse_holdings_from_yahoo(symbol_str, raw_content):
     
     holding_dict['holdings'] = holding_lst
     return holding_dict
-        
 
 def parse_historical_prices_from_yahoo(symbol_str, raw_content):
     """
@@ -185,8 +188,7 @@ def parse_fund_watchlist_from_dropbox():
         line_lst = line.split('-')
         symbol_str = line_lst[0].rstrip(' ')
         symbol_desc = line_lst[1].lstrip(' ')
-        symbol_obj = Symbol(symbol_str)
+        symbol_obj = FundSymbol(symbol_str)
         symbol_obj.desc = symbol_desc
         symbol_lst.append(symbol_obj)
     return symbol_lst
-

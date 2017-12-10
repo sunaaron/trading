@@ -3,7 +3,7 @@ Created on Nov 24, 2017
 
 @author: Aaron
 '''
-from tools import fetcher, parser, misc
+from tools import fetcher, parser
 
 def hydrate_with_details(symbol_lst):
     symbol_details_dict = fetcher.fetch_batch(symbol_lst, 
@@ -20,7 +20,23 @@ def hydrate_with_historical_prices(symbol_lst):
         symbol_str = symbol_obj.symbol
         symbol_obj.history_prices = parser.parse_historical_prices_from_pandas(
                                 symbol_str, symbol_hp_dict[symbol_str])
-
+        
+def hydrate_with_fund_summary(symbol_lst):
+    symbol_summary_dict = fetcher.fetch_batch(symbol_lst,
+                                fetcher.fetch_summary_from_yahoo)
+    for symbol_obj in symbol_lst:
+        symbol_str = symbol_obj.symbol
+        symbol_obj.fund_summary_dict = parser.parse_summary_from_yahoo(
+                                symbol_str, symbol_summary_dict[symbol_str])
+        
+def hydrate_with_fund_holdings(symbol_lst):
+    symbol_holdings_dict = fetcher.fetch_batch(symbol_lst,
+                                fetcher.fetch_holdings_from_yahoo)
+    for symbol_obj in symbol_lst:
+        symbol_str = symbol_obj.symbol
+        symbol_obj.fund_holdings_dict = parser.parse_holdings_from_yahoo(
+                                symbol_str, symbol_holdings_dict[symbol_str])
+            
 def hydrate_with_annual_stmt(symbol_lst):
     symbol_annual_dict = fetcher.fetch_batch(symbol_lst, 
                             fetcher.fetch_annual_stmt_from_mw)
@@ -57,3 +73,5 @@ def hydrate_complete(symbol_lst):
 def hydrate_fund(symbol_lst):
     hydrate_with_details(symbol_lst)
     hydrate_with_historical_prices(symbol_lst)
+    hydrate_with_fund_summary(symbol_lst)
+    hydrate_with_fund_holdings(symbol_lst)

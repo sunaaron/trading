@@ -7,7 +7,7 @@ import os
 import pickle
 
 from tools import dateutil
-from model import Symbol
+from model.symbol import Symbol
 
 def get_year_month_path():
     year_month_str = dateutil.get_year_month()

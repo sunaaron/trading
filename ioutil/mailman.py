@@ -4,7 +4,6 @@ Created on Nov 10, 2017
 @author: Aaron
 '''
 import smtplib
-from context import constants
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from tools import dateutil, misc
@@ -47,49 +46,3 @@ def gen_daily_screen_subject(symbol_lst):
 def gen_daily_watch_subject(watch_type):
     return "Daily %s Watch List - %s" % (
             watch_type, dateutil.get_today_date())
-
-def gen_table_header():
-    return '<html><head><body><table>'
-
-def gen_table_footer():
-    return '</table></body></head></html>'
-
-def gen_finviz_image_tr(symbol_str):
-    img_src = constants.finviz_img_url % symbol_str
-    html_str = '<tr><td><img src=' + img_src
-    html_str += ' width="67%" height="67%"/></td></tr>'
-    return html_str  
-
-def gen_daily_summary_html(symbol_lst):
-    html_str = gen_table_header()
-    
-    for symbol_obj in symbol_lst:
-        html_str += symbol_obj.screen_html_str()
-        html_str += gen_finviz_image_tr(symbol_obj.symbol)
-        
-    html_str += gen_table_footer()
-    return html_str
-
-def gen_watchlist_stock_html(symbol_lst):
-    html_str = gen_table_header()
-    
-    for symbol_obj in symbol_lst:
-        html_str += symbol_obj.stock_watch_html_str()
-        html_str += gen_finviz_image_tr(symbol_obj.symbol)
-    
-    html_str += gen_table_footer()
-    return html_str
-
-def gen_watchlist_fund_html(symbol_lst):
-    symbol_tuple_lst = [((symbol_obj.perf_rate(), symbol_obj.relative_volume()), 
-                         symbol_obj) for symbol_obj in symbol_lst]
-    symbol_tuple_lst.sort(reverse=True)
-    sorted_symbol_lst = [tp[1] for tp in symbol_tuple_lst]
-    
-    html_str = gen_table_header()
-    
-    for symbol_obj in sorted_symbol_lst:
-        html_str += symbol_obj.fund_watch_html_str()
-    
-    html_str += gen_table_footer()
-    return html_str
