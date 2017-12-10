@@ -9,6 +9,5 @@ from tools import dateutil
 
 
 if __name__ == '__main__':
-    print misc.timer(view.track_fundlist)
-#     if dateutil.can_run():
-#         misc.timer(view.track_fundlist)
+    if dateutil.can_run():
+        misc.timer(view.track_fundlist)
