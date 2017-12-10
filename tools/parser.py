@@ -129,19 +129,16 @@ def parse_perf_from_yahoo(raw_content):
     divs = BeautifulSoup(
         raw_content, "html.parser").select('div[class*="Bdbw(1px)"]')
     perf_dict = {}
-    yearly_perf = []
     for div in divs:
         spans = div.select("span")
         first_col = spans[0].text
         if first_col.startswith('201'):
             year = first_col
-            change = spans[2].text
-            yearly_perf.append((year, change))
-        if first_col.startswith('3-Year'):
-            perf_dict['3-year'] = spans[3].text 
-        if first_col.startswith('5-Year'):
-            perf_dict['5-year'] = spans[3].text
-    perf_dict['yearly'] = yearly_perf
+            change = (spans[2].text, spans[3].text)
+            perf_dict[year] = change
+        if ('-Year') in first_col:
+            perf_dict[first_col] = (
+                spans[3].text, spans[4].text)
     return perf_dict
 
 def parse_risk_from_yahoo(raw_content):

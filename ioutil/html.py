@@ -40,32 +40,28 @@ def gen_holdings_td(holdings):
     return html_str
 
 def gen_perf_td(symbol_obj):
-    perf_dict = symbol_obj.perf_dict
     html_str = '<td align=\"left\" valign=\"top\">'
-    for perf in perf_dict['yearly'][:6]:
-        html_str += '<span style=\"width:25px;\">%s</span>: ' \
-                    % perf[0]
-        html_str += symbol_obj.yearly_return_str(perf[1])
-        html_str += '<br>'
-    
-    yrt_3 = perf_dict['3-year']
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "3-YR",
-                                symbol_obj.yearly_return_str(yrt_3)) 
-    yrt_5 = perf_dict['5-year']
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "5-YR", 
-                                symbol_obj.yearly_return_str(yrt_5))
+    for tp in ('2017', '2016', '2015', 
+                 '2014', '2013', '2012', 
+                 '1-Year', '3-Year', '5-Year'):
+        perf_str = symbol_obj.fund_perf(tp)
+        if perf_str != "":
+            perf_ca_str = symbol_obj.fund_perf_category(tp)
+            html_str += '<span style=\"width:25px;\">%s</span>: ' \
+                        % tp
+            
+            html_str += symbol_obj.yearly_perf_str(perf_str)
+            html_str += ' / ' + symbol_obj.yearly_perf_str(perf_ca_str)
+            html_str += '<br>'
     
     html_str += '</td>'
     return html_str
     
 def fund_watch_html_str(symbol_obj):
     yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol
-    html_str = '<tr><td align=\"left\" valign=\"top\" width=\"27%\">'
-    html_str = '%s<a href=\"%s\">%s</a>' % (html_str, 
-                                            yahoo_url, 
-                                            symbol_obj.symbol)
+    html_str = '<tr><td align=\"left\" valign=\"top\" width=\"28%\">'
+    html_str = '%s<strong><a href=\"%s\">%s</a></strong>' % (
+                    html_str, yahoo_url, symbol_obj.symbol)
     
     html_str = "%s<br>%s" %(html_str, symbol_obj.desc)
 
@@ -77,11 +73,6 @@ def fund_watch_html_str(symbol_obj):
                                 "Ma_diff", 
                                 symbol_obj.ma_diff_str())
 
-    perf_year = symbol_obj.attr_dict['Perf Year']
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "Perf Year",
-                                symbol_obj.yearly_return_str(perf_year))
-    
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Perf Momentum",
                                 symbol_obj.perf_rate_str())
@@ -89,7 +80,20 @@ def fund_watch_html_str(symbol_obj):
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Relative vol", 
                                 symbol_obj.relative_volume_str())
+    
+    html_str = "%s<br>%s" %(html_str, "-"*54)
 
+    html_str = "%s<br>%s: %s" %(html_str, 
+                                "P/E", 
+                                symbol_obj.fund_pe_str())
+
+    beta_3 = symbol_obj.three_year_beta()
+    beta_3_ca = symbol_obj.three_year_beta_category()
+    html_str = "%s<br>%s: %s / %s" %(html_str, 
+                                     "3YR-Beta", 
+                                     symbol_obj.beta_str(beta_3),
+                                     symbol_obj.beta_str(beta_3_ca))
+    
     html_str = "%s<br>%s: <b>%s</b>" %(html_str, 
                                        "Dividend", 
                                        symbol_obj.attr_dict['Dividend %'])
@@ -97,10 +101,6 @@ def fund_watch_html_str(symbol_obj):
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Expense Ratio", 
                                 symbol_obj.expense_ratio_str())
-    
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "P/E", 
-                                symbol_obj.fund_pe_str())
 
     html_str += gen_finviz_image_td(symbol_obj.symbol)
     html_str += gen_perf_td(symbol_obj)

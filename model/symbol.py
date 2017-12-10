@@ -133,7 +133,7 @@ class Symbol(object):
             return html.green(perf_rate)
         return html.orange(perf_rate)
     
-    def yearly_return_str(self, value_str):
+    def yearly_perf_str(self, value_str):
         if value_str == 'N/A':
             return value_str
         value = misc.to_float_value(value_str)
@@ -142,3 +142,11 @@ class Symbol(object):
         if value >= 3:
             return html.orange(value_str)
         return html.red(value_str)
+
+    def beta_str(self, value_str):
+        value = misc.to_float_value(value_str)
+        if value >= 1.25:
+            return html.red(value_str)
+        if value >= 1.05:
+            return html.orange(value_str)
+        return html.green(value_str)

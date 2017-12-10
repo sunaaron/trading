@@ -58,4 +58,19 @@ class FundSymbol(Symbol):
     
     def holdings(self):
         return self.holdings_dict['holdings']
-        
+    
+    def fund_perf(self, tp):
+        if tp in self.perf_dict:
+            return self.perf_dict[tp][0]
+        return ""
+
+    def fund_perf_category(self, tp):
+        if tp in self.perf_dict:    
+            return self.perf_dict[tp][1]
+        return ""
+    
+    def three_year_beta(self):
+        return self.risk_dict['Beta']['3-year'][0]
+   
+    def three_year_beta_category(self):
+        return self.risk_dict['Beta']['3-year'][1]
