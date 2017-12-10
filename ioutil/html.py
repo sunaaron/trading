@@ -81,7 +81,7 @@ def fund_watch_html_str(symbol_obj):
                                 "Relative vol", 
                                 symbol_obj.relative_volume_str())
     
-    html_str = "%s<br>%s" %(html_str, "-"*54)
+    html_str = "%s<br>%s" %(html_str, "-"*50)
 
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "P/E", 

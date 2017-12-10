@@ -85,7 +85,7 @@ def fetch_batch(symbol_lst, func):
         t.start()
         count += 1
         if batch_size > 0 and count % batch_size == 0:
-            time.sleep(1)
+            time.sleep(2)
  
     for t in thread_lst:
         t.join()    
