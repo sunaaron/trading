@@ -28,7 +28,7 @@ class FundSymbol(Symbol):
             return misc.to_float_value(
                     self.fund_holdings_dict['Price/Earnings']) 
         except:
-            return self.fund_holdings_dict['Price/Earnings']
+            return self.fund_holdings_dict.get('Price/Earnings', 'N/A')
     
     def fund_pe_str(self):
         pe = self.fund_pe()
@@ -36,7 +36,7 @@ class FundSymbol(Symbol):
             return html.green("Normal")
         if pe >= 50:
             return html.red("Too High")
-        if pe >= 30 and pe < 50: 
+        if pe >= 35 and pe < 50: 
             return html.orange("High")
         return html.green("Normal")
     

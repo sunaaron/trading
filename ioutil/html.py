@@ -40,7 +40,7 @@ def gen_holdings_td(holdings):
     return html_str
     
 def fund_watch_html_str(symbol_obj):
-    yahoo_url = constants.yahoo_q_url % symbol_obj.symbol
+    yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol
     html_str = '<tr><td align=\"left\" valign=\"top\" width=\"33%\">'
     html_str = '%s<a href=\"%s\">%s</a>' % (html_str, 
                                             yahoo_url, 
