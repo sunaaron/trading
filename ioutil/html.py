@@ -53,6 +53,9 @@ def fund_watch_html_str(symbol_obj):
     html_str = '%s<strong><a href=\"%s\">%s</a></strong>' % (
                     html_str, yahoo_url, symbol_obj.symbol)
     
+    if symbol_obj.is_pick_today():
+        html_str = "%s (&#9733; %s &#9733;)" % (html_str, green("Today's Pick"))
+    
     html_str = "%s<br>%s" %(html_str, symbol_obj.desc)
 
     html_str = "%s<br>%s: %s" %(html_str, 
@@ -102,7 +105,7 @@ def fund_watch_html_str(symbol_obj):
 
 def gen_watchlist_fund_html(symbol_lst):
     # Sort first by perf_rate and relative_volume
-    symbol_tuple_lst = [((symbol_obj.perf_rate(), symbol_obj.relative_volume()), 
+    symbol_tuple_lst = [((symbol_obj.is_pick_today(), symbol_obj.perf_rate()), 
                          symbol_obj) for symbol_obj in symbol_lst]
     symbol_tuple_lst.sort(reverse=True)
     sorted_symbol_lst = [tp[1] for tp in symbol_tuple_lst]

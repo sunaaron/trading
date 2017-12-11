@@ -29,6 +29,21 @@ class FundSymbol(Symbol):
         self.holdings_dict = None
         self.perf_dict = None
         self.risk_dict = None
+        
+    def is_pick_today(self):
+        """
+        This relaxes the condition a bit
+        """
+        if self.rsi_value() >= 70:
+            return False
+        if self.ma_diff_value() >= 0.012:
+            return False
+        if self.perf_rate() < -0.1:
+            return False
+        if misc.to_float_value(
+            self.five_year_treynor()) < 5:
+            return False
+        return True
 
     def expense_ratio(self):
         return self.summary_dict.get('Expense Ratio (net)', 'N/A')
