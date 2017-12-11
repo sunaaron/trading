@@ -11,7 +11,11 @@ from model.symbol import Symbol
 class FundSymbol(Symbol):
     dict_attrs = [
                   "symbol", "symbol_type",
+                  "desc",
+                  "rsi", "ma_diff",
+                  "attr_dict",
                   "summary_dict", 
+                  "holdings_dict",
                   "perf_dict",
                   "risk_dict",
                   ]
@@ -29,7 +33,7 @@ class FundSymbol(Symbol):
     def expense_ratio(self):
         return self.summary_dict.get('Expense Ratio (net)', 'N/A')
     
-    def expense_ratio_str(self):
+    def expense_ratio_html(self):
         exp_ratio = self.expense_ratio()
         if exp_ratio == 'N/A':
             return html.orange(exp_ratio)
@@ -39,7 +43,7 @@ class FundSymbol(Symbol):
         return html.green(exp_ratio)
     
     def net_assets(self):
-        return self.summary_dict['Net Assets']
+        return self.summary_dict.get('Net Assets', 'N/A')
     
     def fund_pe(self):
         try:
@@ -48,7 +52,7 @@ class FundSymbol(Symbol):
         except:
             return self.holdings_dict.get('Price/Earnings', 'N/A')
     
-    def fund_pe_str(self):
+    def fund_pe_html(self):
         pe = self.fund_pe()
         pe_str = self.holdings_dict.get('Price/Earnings', 'N/A')
         if pe == 'N/A':
@@ -72,14 +76,24 @@ class FundSymbol(Symbol):
             return self.perf_dict[tp][1]
         return 'N/A'
     
-    def three_year_beta(self):
-        if 'Beta' in self.risk_dict:
-            if '3-year' in self.risk_dict['Beta']:
-                return self.risk_dict['Beta']['3-year'][0]
-        return 'N/A'
+    def five_year_beta(self):
+        beta_5 = self.risk_dict['Beta']['5-year'][0]
+        if beta_5 != '0':
+            return beta_5
+        return self.risk_dict['Beta']['3-year'][0]
    
-    def three_year_beta_category(self):
-        if 'Beta' in self.risk_dict:
-            if '3-year' in self.risk_dict['Beta']:
-                return self.risk_dict['Beta']['3-year'][1]
-        return 'N/A'
+    def five_year_treynor(self):
+        treynor_5 = self.risk_dict['Treynor Ratio']['5-year'][0] 
+        if treynor_5 != '0':
+            return treynor_5
+        return self.risk_dict['Treynor Ratio']['3-year'][0]
+        
+    def treynor_html(self, value_str):
+        if value_str == 'N/A':
+            return value_str
+        value = misc.to_float_value(value_str)
+        if value > 5:
+            return html.green(value_str)
+        if value <= 0:
+            return html.red(value_str)
+        return html.orange(value_str)

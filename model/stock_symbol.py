@@ -11,7 +11,7 @@ class StockSymbol(Symbol):
     dict_attrs = [
                   "symbol", "symbol_type",
                   "screen_dict", "attr_dict", 
-                  "rsi", "ma_diff",  
+                  "rsi", "ma_diff",
                   "annual_sales", "annual_incomes", 
                   "quarterly_sales", "quarterly_incomes",
                   ]

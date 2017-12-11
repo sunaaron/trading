@@ -71,7 +71,7 @@ class Symbol(object):
     def relative_volume(self):
         return float(self.attr_dict["Rel Volume"])
     
-    def relative_volume_str(self):
+    def relative_volume_html(self):
         rel_vol = self.relative_volume()
         if rel_vol > 1.2:
             return html.green(rel_vol)
@@ -89,7 +89,7 @@ class Symbol(object):
             self.rsi = metric.rsi(self.close_prices())
         return self.rsi
     
-    def rsi_str(self):
+    def rsi_html(self):
         self.rsi_value()
         if self.rsi >= 65:
             return html.red(self.rsi)
@@ -103,7 +103,7 @@ class Symbol(object):
                                 self.close_prices(), 20, 50)
         return self.ma_diff
 
-    def ma_diff_str(self):
+    def ma_diff_html(self):
         self.ma_diff_value()
         if self.ma_diff >= -0.005 and self.ma_diff <= 0.01:
             return html.green(self.ma_diff)
@@ -125,7 +125,7 @@ class Symbol(object):
                        ]
         return metric.slope(weekly_perf)
     
-    def perf_rate_str(self):
+    def perf_rate_html(self):
         perf_rate = self.perf_rate()
         if perf_rate < -0.1:
             return html.red(perf_rate)
@@ -133,7 +133,7 @@ class Symbol(object):
             return html.green(perf_rate)
         return html.orange(perf_rate)
     
-    def yearly_perf_str(self, value_str):
+    def yearly_perf_html(self, value_str):
         if value_str == 'N/A':
             return value_str
         value = misc.to_float_value(value_str)
@@ -143,7 +143,7 @@ class Symbol(object):
             return html.orange(value_str)
         return html.red(value_str)
 
-    def beta_str(self, value_str):
+    def beta_html(self, value_str):
         if value_str == 'N/A':
             return value_str
         value = misc.to_float_value(value_str)

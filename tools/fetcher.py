@@ -54,6 +54,7 @@ def fetch_historical_prices_from_yahoo(symbol_str):
     hp_url = constants.yahoo_hp_url % symbol_str
     return urllib2.urlopen(hp_url).read()
 
+@retry(requests.exceptions.ConnectionError, tries=3, delay=3, backoff=2)
 def fetch_historical_prices_from_pandas(symbol_str):
     requests.packages.urllib3.disable_warnings()
     date_diff = timedelta(days=365)

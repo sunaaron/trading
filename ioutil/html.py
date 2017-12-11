@@ -38,8 +38,8 @@ def gen_perf_td(symbol_obj):
         html_str += '<span style=\"width:25px;\">%s</span>: ' \
                     % tp
         
-        html_str += symbol_obj.yearly_perf_str(perf_str)
-        html_str += ' / ' + symbol_obj.yearly_perf_str(perf_ca_str)
+        html_str += symbol_obj.yearly_perf_html(perf_str)
+        html_str += ' / ' + symbol_obj.yearly_perf_html(perf_ca_str)
         html_str += '<br>'
         if tp == '5-Year':
             html_str += '<br>'
@@ -57,32 +57,35 @@ def fund_watch_html_str(symbol_obj):
 
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Rsi", 
-                                symbol_obj.rsi_str())
+                                symbol_obj.rsi_html())
     
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Ma_diff", 
-                                symbol_obj.ma_diff_str())
+                                symbol_obj.ma_diff_html())
 
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Perf Momentum",
-                                symbol_obj.perf_rate_str())
+                                symbol_obj.perf_rate_html())
     
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Relative vol", 
-                                symbol_obj.relative_volume_str())
+                                symbol_obj.relative_volume_html())
     
     html_str = "%s<br>%s" %(html_str, "-"*50)
 
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "P/E", 
-                                symbol_obj.fund_pe_str())
+                                symbol_obj.fund_pe_html())
 
-    beta_3 = symbol_obj.three_year_beta()
-    beta_3_ca = symbol_obj.three_year_beta_category()
-    html_str = "%s<br>%s: %s / %s" %(html_str, 
-                                     "3YR-Beta", 
-                                     symbol_obj.beta_str(beta_3),
-                                     symbol_obj.beta_str(beta_3_ca))
+    beta = symbol_obj.five_year_beta()
+    html_str = "%s<br>%s: %s" %(html_str, 
+                                "5YR-Beta", 
+                                symbol_obj.beta_html(beta))
+    
+    treynor = symbol_obj.five_year_treynor()
+    html_str = "%s<br>%s: %s" %(html_str, 
+                                "5YR-Treynor", 
+                                symbol_obj.treynor_html(treynor))
     
     html_str = "%s<br>%s: <b>%s</b>" %(html_str, 
                                        "Dividend", 
@@ -90,7 +93,7 @@ def fund_watch_html_str(symbol_obj):
     
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Expense Ratio", 
-                                symbol_obj.expense_ratio_str())
+                                symbol_obj.expense_ratio_html())
 
     html_str += gen_finviz_image_td(symbol_obj.symbol)
     html_str += gen_perf_td(symbol_obj)

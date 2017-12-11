@@ -45,7 +45,7 @@ def load_symbol_as_str(path):
     symbol_strs = symbol_file.read().split("\n")
     return [symbol_str.rstrip('\r') for symbol_str in symbol_strs]
 
-def dump_symbol_dict_by_pickle(symbol_lst):
+def dump_symbol_lst_by_pickle(symbol_lst):
     symbol_strs = []
     symbol_dict = {}
     for symbol_obj in symbol_lst:
@@ -81,7 +81,7 @@ def load_symbol_dict_by_pickle():
     symbol_lst = load_symbol_lst_by_pickle()
     return {symbol_obj.symbol: symbol_obj for symbol_obj in symbol_lst}
 
-def save_screen_table(table_str):
-    with open("./data/table.txt", "w") as f:
-        f.write(table_str)
+def save_csv(csv_str):
+    with open("./data/csv.txt", "w") as f:
+        f.write(csv_str)
     f.close()
