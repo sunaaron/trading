@@ -59,6 +59,10 @@ def fund_watch_html_str(symbol_obj):
     html_str = "%s<br>%s" %(html_str, symbol_obj.desc)
 
     html_str = "%s<br>%s: %s" %(html_str, 
+                                "Change", 
+                                symbol_obj.change_html())
+    
+    html_str = "%s<br>%s: %s" %(html_str, 
                                 "Rsi", 
                                 symbol_obj.rsi_html())
     
@@ -74,7 +78,7 @@ def fund_watch_html_str(symbol_obj):
                                 "Relative vol", 
                                 symbol_obj.relative_volume_html())
     
-    html_str = "%s<br>%s" %(html_str, "-"*50)
+    html_str = "%s<br>%s" %(html_str, "-"*46)
 
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "P/E", 

@@ -68,6 +68,14 @@ class Symbol(object):
     def change(self):
         return float(self.attr_dict["Change"][:-1])
     
+    def change_html(self):
+        change = self.change()
+        if change >= 1:
+            return html.green(change)
+        if change < 0:
+            return html.red(change)
+        return html.orange(change)
+    
     def relative_volume(self):
         return float(self.attr_dict["Rel Volume"])
     
