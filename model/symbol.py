@@ -117,9 +117,9 @@ class Symbol(object):
 
     def ma_diff_html(self):
         self.ma_diff_value()
-        if self.ma_diff >= -0.005 and self.ma_diff <= 0.01:
+        if self.ma_diff >= -0.005 and self.ma_diff <= 0.012:
             return html.green(self.ma_diff)
-        if self.ma_diff > 0.01:
+        if self.ma_diff > 0.012:
             return html.red(self.ma_diff)
         return html.orange(self.ma_diff)
     

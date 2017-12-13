@@ -36,7 +36,7 @@ class FundSymbol(Symbol):
         """
         if self.rsi_value() >= 70:
             return False
-        if self.ma_diff_value() >= 0.012:
+        if self.ma_diff_value() >= 0.014:
             return False
         if self.perf_rate() < -0.1:
             return False
@@ -91,21 +91,22 @@ class FundSymbol(Symbol):
             return self.perf_dict[tp][1]
         return 'N/A'
     
-    def five_year_beta(self):
-        if not 'Beta' in self.risk_dict:
+    def five_year_risk_factor(self, name):
+        if not name in self.risk_dict:
             return 'N/A'
-        beta_5 = self.risk_dict['Beta']['5-year'][0]
-        if beta_5 != '0':
-            return beta_5
-        return self.risk_dict['Beta']['3-year'][0]
+        value = self.risk_dict[name]['5-year'][0]
+        if value != '0':
+            return value
+        return self.risk_dict[name]['3-year'][0]
+    
+    def five_year_alpha(self):
+        return self.five_year_risk_factor('Alpha')
+    
+    def five_year_beta(self):
+        return self.five_year_risk_factor('Beta')
    
     def five_year_treynor(self):
-        if not 'Treynor Ratio' in self.risk_dict:
-            return 'N/A'
-        treynor_5 = self.risk_dict['Treynor Ratio']['5-year'][0] 
-        if treynor_5 != '0':
-            return treynor_5
-        return self.risk_dict['Treynor Ratio']['3-year'][0]
+        return self.five_year_risk_factor('Treynor Ratio')
         
     def treynor_html(self, value_str):
         if value_str == 'N/A':

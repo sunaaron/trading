@@ -12,4 +12,3 @@ if __name__ == '__main__':
     hydrate_and_dump_diff_symbols()
     csv.gen_stock_table()
 #     csv.gen_fund_table()
-    

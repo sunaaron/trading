@@ -72,6 +72,7 @@ def gen_fund_caption():
     caption_str += "1YR Perf" + "\t"
     caption_str += "3YR Perf" + "\t"
     caption_str += "5YR Perf" + "\t"
+    caption_str += "5YR-Alpha" + "\t"
     caption_str += "5YR-Beta" + "\t"
     caption_str += "5YR-Treynor" + "\t"
 
@@ -92,6 +93,7 @@ def gen_fund_row(symbol_obj):
     row_str += symbol_obj.fund_perf('1-Year') + "\t"
     row_str += symbol_obj.fund_perf('3-Year') + "\t"
     row_str += symbol_obj.fund_perf('5-Year') + "\t"
+    row_str += symbol_obj.five_year_alpha() + "\t"
     row_str += symbol_obj.five_year_beta() + "\t"
     row_str += symbol_obj.five_year_treynor() + "\t"
     
