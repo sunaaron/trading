@@ -92,12 +92,16 @@ class FundSymbol(Symbol):
         return 'N/A'
     
     def five_year_beta(self):
+        if not 'Beta' in self.risk_dict:
+            return 'N/A'
         beta_5 = self.risk_dict['Beta']['5-year'][0]
         if beta_5 != '0':
             return beta_5
         return self.risk_dict['Beta']['3-year'][0]
    
     def five_year_treynor(self):
+        if not 'Treynor Ratio' in self.risk_dict:
+            return 'N/A'
         treynor_5 = self.risk_dict['Treynor Ratio']['5-year'][0] 
         if treynor_5 != '0':
             return treynor_5
