@@ -24,3 +24,7 @@ def can_run():
     """
     weekday = get_weekday()
     return weekday in [1, 2, 3, 4, 5]
+
+def get_diff_days(date1, date2):
+    delta = date1 - date2
+    return delta.days

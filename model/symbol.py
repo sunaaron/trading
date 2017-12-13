@@ -58,6 +58,11 @@ class Symbol(object):
     def from_dict(self, symbol_dict):
         for attr in self.dict_attrs:
             self.__setattr__(attr, symbol_dict[attr])
+            
+    def latest_date(self):
+        """ datetime.datetime type
+        """
+        return self.history_prices.daily_summaries[-1].date
 
     def open_prices(self):
         return self.history_prices.open_prices()

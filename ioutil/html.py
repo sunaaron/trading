@@ -4,6 +4,9 @@ Created on Dec 9, 2017
 @author: Aaron
 '''
 from context import constants
+from tools.misc import logger
+
+logger = logger()
 
 
 def red(text):
@@ -48,6 +51,7 @@ def gen_perf_td(symbol_obj):
     return html_str
     
 def fund_watch_html_str(symbol_obj):
+    logger.info("Running fund_watch_html_str")
     yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol
     html_str = '<tr><td align=\"left\" valign=\"top\" width=\"28%\">'
     html_str = '%s<strong><a href=\"%s\">%s</a></strong>' % (

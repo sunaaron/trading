@@ -12,6 +12,7 @@ class FundSymbol(Symbol):
     dict_attrs = [
                   "symbol", "symbol_type",
                   "desc",
+                  "history_prices",
                   "rsi", "ma_diff",
                   "attr_dict",
                   "summary_dict", 

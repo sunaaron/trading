@@ -53,8 +53,9 @@ def dump_symbol_lst_by_pickle(symbol_lst):
         symbol_strs.append(symbol_obj.symbol)
         symbol_dict[symbol_str] = symbol_obj.to_dict()
     symbol_strs.sort()
-    path = "./data/%s_%s.pickle" % (symbol_strs[0], 
-                                    symbol_strs[-1])
+    path = "./data/%s_%s_%s.pickle" % (symbol_strs[0], 
+                                       symbol_strs[-1], 
+                                       str(dateutil.get_today_date()))
     with open(path, "w") as f:
         pickle.dump(symbol_dict, f) 
     f.close()

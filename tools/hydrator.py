@@ -10,40 +10,54 @@ from tools import fetcher, parser, filter
 from tools.misc import logger
 
 logger = logger()
+local_symbol_dict = diskman.load_symbol_dict_by_pickle() 
 
 def hydrate_with_details(symbol_lst):
     logger.info("Running hydrate_with_details")
-    symbol_details_dict = fetcher.fetch_batch(symbol_lst, 
+    filtered_symbol_lst = filter.filter_local_existent_newer_than(
+                                local_symbol_dict, symbol_lst, days=0)
+    symbol_details_dict = fetcher.fetch_batch(filtered_symbol_lst, 
                             fetcher.fetch_symbol_details_from_finviz)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
-        symbol_obj.attr_dict = parser.parse_attr_dict_from_finviz(
+        if symbol_str in symbol_details_dict:
+            symbol_obj.attr_dict = parser.parse_attr_dict_from_finviz(
                                     symbol_details_dict[symbol_str])
+        else:
+            symbol_obj.attr_dict = \
+                local_symbol_dict[symbol_str].attr_dict
+        
 
 def hydrate_with_historical_prices(symbol_lst):
     logger.info("Running hydrate_with_historical_prices")
-    symbol_hp_dict = fetcher.fetch_batch(symbol_lst,
+    filtered_symbol_lst = filter.filter_local_existent_newer_than(
+                                local_symbol_dict, symbol_lst, days=0)
+    symbol_hp_dict = fetcher.fetch_batch(filtered_symbol_lst,
                         fetcher.fetch_historical_prices_from_pandas)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
-        symbol_obj.history_prices = parser.parse_historical_prices_from_pandas(
+        if symbol_str in symbol_hp_dict:
+            symbol_obj.history_prices = parser.parse_historical_prices_from_pandas(
                                 symbol_str, symbol_hp_dict[symbol_str])
-
+        else:
+            symbol_obj.history_prices = \
+                local_symbol_dict[symbol_str].history_prices
+                
 def hydrate_with_fund_summary(symbol_lst):
     logger.info("Running hydrate_with_fund_summary")
     # We only use expense ratio in fund summary, so we cache them
-    filtered_symbol_lst = filter.filter_local_existent(symbol_lst)
-    local_symbol_dict = diskman.load_symbol_dict_by_pickle()
+    filtered_symbol_lst = filter.filter_local_existent_newer_than(
+                                local_symbol_dict, symbol_lst, days=31)
     symbol_summary_dict = fetcher.fetch_batch(filtered_symbol_lst,
                                 fetcher.fetch_summary_from_yahoo)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
-        if symbol_str in local_symbol_dict:
-            symbol_obj.summary_dict = \
-                local_symbol_dict[symbol_str].summary_dict   
-        else:
+        if symbol_str in symbol_summary_dict:
             symbol_obj.summary_dict = parser.parse_summary_from_yahoo(
                 symbol_summary_dict[symbol_str])
+        else:
+            symbol_obj.summary_dict = \
+                local_symbol_dict[symbol_str].summary_dict
         
 def hydrate_with_fund_holdings(symbol_lst):
     logger.info("Running hydrate_with_fund_holdings")
@@ -57,34 +71,34 @@ def hydrate_with_fund_holdings(symbol_lst):
 def hydrate_with_fund_perf(symbol_lst):
     logger.info("Running hydrate_with_fund_perf")
     # We only use past five years's perf in fund perf, so we cache them
-    filtered_symbol_lst = filter.filter_local_existent(symbol_lst)
-    local_symbol_dict = diskman.load_symbol_dict_by_pickle()
+    filtered_symbol_lst = filter.filter_local_existent_newer_than(
+                                local_symbol_dict, symbol_lst, days=14)
     symbol_perf_dict = fetcher.fetch_batch(filtered_symbol_lst,
                                 fetcher.fetch_perf_from_yahoo)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
-        if symbol_str in local_symbol_dict:
-            symbol_obj.perf_dict = \
-                local_symbol_dict[symbol_str].perf_dict
-        else:
+        if symbol_str in symbol_perf_dict:
             symbol_obj.perf_dict = parser.parse_perf_from_yahoo(
                 symbol_perf_dict[symbol_str])
+        else:
+            symbol_obj.perf_dict = \
+                local_symbol_dict[symbol_str].perf_dict
             
 def hydrate_with_fund_risk(symbol_lst):
     logger.info("Running hydrate_with_fund_risk")
     # We only use past years's alpha,beta in fund perf, so we cache them
-    filtered_symbol_lst = filter.filter_local_existent(symbol_lst)
-    local_symbol_dict = diskman.load_symbol_dict_by_pickle()
+    filtered_symbol_lst = filter.filter_local_existent_newer_than(
+                                local_symbol_dict, symbol_lst, days=14)
     symbol_risk_dict = fetcher.fetch_batch(filtered_symbol_lst,
                                 fetcher.fetch_risk_from_yahoo)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
-        if symbol_str in local_symbol_dict:
-            symbol_obj.risk_dict = \
-                local_symbol_dict[symbol_str].risk_dict
-        else:
+        if symbol_str in symbol_risk_dict:
             symbol_obj.risk_dict = parser.parse_risk_from_yahoo(
                 symbol_risk_dict[symbol_str])
+        else:
+            symbol_obj.risk_dict = \
+                local_symbol_dict[symbol_str].risk_dict
             
 def hydrate_with_annual_stmt(symbol_lst):
     logger.info("Running hydrate_with_annual_stmt")
