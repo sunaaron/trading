@@ -21,3 +21,5 @@ dropbox_fundlist_url = "https://www.dropbox.com/s/t7wfkzq85u13c43/fund.txt"
 
 mw_annual_url = "https://www.marketwatch.com/investing/stock/%s/financials"
 mw_quarterly_url = "https://www.marketwatch.com/investing/stock/%s/financials/income/quarter"
+
+mkt_index = {'DIA': 1, 'SPY': 1, 'ONEQ': 1}

@@ -54,7 +54,10 @@ def fund_watch_html_str(symbol_obj):
                     html_str, yahoo_url, symbol_obj.symbol)
     
     if symbol_obj.is_pick_today():
-        html_str = "%s (&#9733; %s &#9733;)" % (html_str, green("Today's Pick"))
+        html_str = "%s (&#9733; %s &#9733;)" % (html_str, green("PoD"))
+        
+    if symbol_obj.is_high_volume():
+        html_str = "%s (&#9889; %s &#9889;)" % (html_str, orange("HV"))
     
     html_str = "%s<br>%s" %(html_str, symbol_obj.desc)
 
@@ -107,6 +110,15 @@ def fund_watch_html_str(symbol_obj):
     html_str += '</tr>'
     return html_str
 
+
+def get_index_symbols(symbol_lst):
+    return [s for s in symbol_lst \
+                if s.symbol in constants.mkt_index]
+
+def get_non_index_symbols(symbol_lst):
+    return [s for s in symbol_lst \
+                if not s.symbol in constants.mkt_index]
+
 def gen_watchlist_fund_html(symbol_lst):
     # Sort first by perf_rate and relative_volume
     symbol_tuple_lst = [((symbol_obj.is_pick_today(), symbol_obj.perf_rate()), 
@@ -114,9 +126,12 @@ def gen_watchlist_fund_html(symbol_lst):
     symbol_tuple_lst.sort(reverse=True)
     sorted_symbol_lst = [tp[1] for tp in symbol_tuple_lst]
     
+    final_symbol_lst = get_index_symbols(sorted_symbol_lst)
+    final_symbol_lst.extend(get_non_index_symbols(sorted_symbol_lst))
+
     html_str = gen_table_header()
     
-    for symbol_obj in sorted_symbol_lst:
+    for symbol_obj in final_symbol_lst:
         html_str += fund_watch_html_str(symbol_obj)
     
     html_str += gen_table_footer()

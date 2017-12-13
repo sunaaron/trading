@@ -79,6 +79,9 @@ class Symbol(object):
     
     def relative_volume(self):
         return float(self.attr_dict["Rel Volume"])
+
+    def is_high_volume(self):
+        return self.relative_volume() >= 1.5
     
     def relative_volume_html(self):
         rel_vol = self.relative_volume()
