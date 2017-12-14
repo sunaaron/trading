@@ -146,12 +146,15 @@ class Symbol(object):
         perf_half_year = misc.to_float_value(self.attr_dict['Perf Half Y'])
         perf_quarter = misc.to_float_value(self.attr_dict['Perf Quarter'])
         perf_month = misc.to_float_value(self.attr_dict['Perf Month'])
+        perf_biweek = (self.close_prices()[-1] - 
+                       self.close_prices()[-10]) / self.close_prices()[-10]  
        
         weekly_perf = [
                        metric.compound(perf_year/100, 52), 
                        metric.compound(perf_half_year/100, 26),
                        metric.compound(perf_quarter/100, 13),
                        metric.compound(perf_month/100, 4.3),
+                       metric.compound(perf_biweek, 2),
                        ]
         return metric.slope(weekly_perf)
     
