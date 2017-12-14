@@ -128,7 +128,16 @@ class Symbol(object):
             return html.red(self.ma_diff)
         return html.orange(self.ma_diff)
     
-    def perf_rate(self):
+    def ma_diff_trend(self, days=5):
+        start_index = - (1 + days)
+        return metric.slope(self.close_prices()[start_index:-1])
+
+    def ma_diff_trend_html(self):
+        if self.ma_diff_trend() >= 0:
+            return html.green('&#8679;')
+        return html.orange('&#8681;')
+    
+    def perf_trend(self):
         perf_year = misc.to_float_value(self.attr_dict['Perf Year'])
         perf_half_year = misc.to_float_value(self.attr_dict['Perf Half Y'])
         perf_quarter = misc.to_float_value(self.attr_dict['Perf Quarter'])
@@ -142,8 +151,8 @@ class Symbol(object):
                        ]
         return metric.slope(weekly_perf)
     
-    def perf_rate_html(self):
-        perf_rate = self.perf_rate()
+    def perf_trend_html(self):
+        perf_rate = self.perf_trend()
         if perf_rate < -0.1:
             return html.red(perf_rate)
         if perf_rate > 0.1:

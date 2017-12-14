@@ -39,7 +39,7 @@ class FundSymbol(Symbol):
             return False
         if self.ma_diff_value() >= 0.014:
             return False
-        if self.perf_rate() < -0.1:
+        if self.perf_trend() < -0.1:
             return False
         if misc.to_float_value(
             self.five_year_treynor()) < 5:

@@ -85,7 +85,7 @@ def gen_fund_row(symbol_obj):
     row_str += str(symbol_obj.rsi) + "\t"
     row_str += str(symbol_obj.ma_diff) + "\t"
     row_str += str(symbol_obj.relative_volume()) + "\t"
-    row_str += str(symbol_obj.perf_rate()) + "\t"
+    row_str += str(symbol_obj.perf_trend()) + "\t"
 
     row_str += symbol_obj.attr_dict["Dividend %"] + "\t"
     row_str += symbol_obj.expense_ratio() + "\t"
