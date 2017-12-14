@@ -43,7 +43,15 @@ def ma_diff_ratio(values, window_1, window_2):
     ma_1_lst = ma(values, window_1)
     ma_2_lst = ma(values, window_2)
     ma_diff = (ma_1_lst[-1] - ma_2_lst[-1]) / ma_2_lst[-1]
-    return round(ma_diff, 6) 
+    return round(ma_diff, 6)
+
+def ma_diff_trend(values, window_1, window_2, days=5):
+    ma_1_lst = ma(values, window_1)
+    ma_2_lst = ma(values, window_2)
+    ma_diffs = []
+    for i in xrange(-days, 0):
+        ma_diffs.append(ma_1_lst[i]-ma_2_lst[i])
+    return slope(ma_diffs)
 
 def rsi(values, n=14):
     """

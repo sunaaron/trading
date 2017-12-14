@@ -48,6 +48,8 @@ class Symbol(object):
         
         self.rsi = None
         self.ma_diff = None
+        self.wd1 = 20
+        self.wd2 = 50
 
     def to_dict(self):
         symbol_dict = {}
@@ -117,7 +119,9 @@ class Symbol(object):
     def ma_diff_value(self):
         if self.ma_diff is None:
             self.ma_diff = metric.ma_diff_ratio(
-                                self.close_prices(), 20, 50)
+                                self.close_prices(), 
+                                self.wd1,
+                                self.wd2)
         return self.ma_diff
 
     def ma_diff_html(self):
@@ -129,8 +133,8 @@ class Symbol(object):
         return html.orange(self.ma_diff)
     
     def ma_diff_trend(self, days=5):
-        start_index = - (1 + days)
-        return metric.slope(self.close_prices()[start_index:-1])
+        return metric.ma_diff_trend(self.close_prices(), 
+                                    self.wd1, self.wd2)
 
     def ma_diff_trend_html(self):
         if self.ma_diff_trend() >= 0:
