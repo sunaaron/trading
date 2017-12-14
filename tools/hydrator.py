@@ -145,7 +145,7 @@ def hydrate_fund(symbol_lst):
     hydrate_with_fund_perf(symbol_lst)
     hydrate_with_fund_risk(symbol_lst)
 
-def batch_hydrate(symbol_lst, hydrate_func, batch_size=7):
+def batch_hydrate(symbol_lst, hydrate_func, batch_size=5):
     batch_symbols = []
     for i in xrange(len(symbol_lst)):
         batch_symbols.append(symbol_lst[i])
