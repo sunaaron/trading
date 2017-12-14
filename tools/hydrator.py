@@ -72,7 +72,7 @@ def hydrate_with_fund_perf(symbol_lst):
     logger.info("Running hydrate_with_fund_perf")
     # We only use past five years's perf in fund perf, so we cache them
     filtered_symbol_lst = filter.filter_local_existent_newer_than(
-                                local_symbol_dict, symbol_lst, days=14)
+                                local_symbol_dict, symbol_lst, days=5)
     symbol_perf_dict = fetcher.fetch_batch(filtered_symbol_lst,
                                 fetcher.fetch_perf_from_yahoo)
     for symbol_obj in symbol_lst:
@@ -88,7 +88,7 @@ def hydrate_with_fund_risk(symbol_lst):
     logger.info("Running hydrate_with_fund_risk")
     # We only use past years's alpha,beta in fund perf, so we cache them
     filtered_symbol_lst = filter.filter_local_existent_newer_than(
-                                local_symbol_dict, symbol_lst, days=14)
+                                local_symbol_dict, symbol_lst, days=5)
     symbol_risk_dict = fetcher.fetch_batch(filtered_symbol_lst,
                                 fetcher.fetch_risk_from_yahoo)
     for symbol_obj in symbol_lst:
@@ -145,7 +145,7 @@ def hydrate_fund(symbol_lst):
     hydrate_with_fund_perf(symbol_lst)
     hydrate_with_fund_risk(symbol_lst)
 
-def batch_hydrate(symbol_lst, hydrate_func, batch_size=5):
+def batch_hydrate(symbol_lst, hydrate_func, batch_size=7):
     batch_symbols = []
     for i in xrange(len(symbol_lst)):
         batch_symbols.append(symbol_lst[i])
