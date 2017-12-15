@@ -35,18 +35,18 @@ class FundSymbol(Symbol):
         """
         This relaxes the condition a bit
         """
-        if self.rsi_value() >= 68:
+        if self.rsi_value() >= 67:
             return False
-        if self.ma_rally_days() <= 3:
+        if self.ma_rally_days() < 4:
             return False
-        if self.ma_rally_days() >= 13:
+        if self.ma_rally_days() > 20:
             return False
         else:
-            if self.ma_diff_value() >= 0.018:
+            if self.ma_diff_value() > 0.018:
                 return False
-        if self.perf_trend_since_year() < -0.02:
+        if self.perf_trend_since_year() <= -0.02:
             return False
-        if self.perf_trend_since_half_year() < -0.02:
+        if self.perf_trend_since_half_year() <= -0.02:
             return False
         return True
 
@@ -60,6 +60,8 @@ class FundSymbol(Symbol):
         expense_ratio = misc.to_float_value(exp_ratio)
         if expense_ratio >= 0.5:
             return html.red(exp_ratio)
+        if expense_ratio >= 0.4:
+            return html.orange(exp_ratio)
         return html.green(exp_ratio)
     
     def net_assets(self):
