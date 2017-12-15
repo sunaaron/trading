@@ -171,8 +171,6 @@ class Symbol(object):
                              ])
     
     def perf_trend_since_year(self):
-        if self.symbol == 'IBUY':
-            import ipdb; ipdb.set_trace()
         return metric.slope([
                              self.perf_weekly_by_year(),
                              self.perf_weekly_by_half_year(),
