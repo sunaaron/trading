@@ -65,17 +65,21 @@ def load_symbol_lst_by_pickle():
     pickle_paths = ["./data/%s" % p 
                     for p in path_lst if p.endswith(".pickle")]
     pickle_paths.sort() # smaller paths are loaded first
+
+    for i in xrange(len(pickle_paths)-1):
+        os.unlink(pickle_paths[i])
+    
     symbol_lst = []
-    for path in pickle_paths:
-        with open(path, "r") as f:
-            cur_dict = pickle.load(f)
-        f.close()
-        for cur_symbol_str in cur_dict:
-            symbol_type = cur_dict[cur_symbol_str]['symbol_type']
-            symbol_obj = helper.gen_symbol_obj(
-                            cur_symbol_str, symbol_type)
-            symbol_obj.from_dict(cur_dict[cur_symbol_str])
-            symbol_lst.append(symbol_obj)
+    with open(pickle_paths[-1], "r") as f:
+        cur_dict = pickle.load(f)
+    f.close()
+    for cur_symbol_str in cur_dict:
+        symbol_type = cur_dict[cur_symbol_str]['symbol_type']
+        symbol_obj = helper.gen_symbol_obj(
+                        cur_symbol_str, symbol_type)
+        symbol_obj.from_dict(cur_dict[cur_symbol_str])
+        symbol_lst.append(symbol_obj)
+    
     return symbol_lst
 
 def load_symbol_dict_by_pickle():
