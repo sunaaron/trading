@@ -64,7 +64,7 @@ def ma_rally_days(values, window_1, window_2):
     start_idx = -min_len
     while i >= start_idx:
         ma_diff = (ma_1_lst[i] - ma_2_lst[i]) / ma_2_lst[i]
-        if ma_diff < 0.001:
+        if ma_diff <= 0:
             break
         i -= 1
         days += 1
