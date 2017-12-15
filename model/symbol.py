@@ -123,7 +123,7 @@ class Symbol(object):
                                 self.wd1,
                                 self.wd2)
         return self.ma_diff
-
+    
     def ma_diff_html(self):
         self.ma_diff_value()
         if self.ma_diff >= -0.005 and self.ma_diff <= 0.012:
@@ -135,6 +135,20 @@ class Symbol(object):
     def ma_diff_trend(self, days=5):
         return metric.ma_diff_trend(self.close_prices(), 
                                     self.wd1, self.wd2)
+
+    def ma_rally_days(self):
+        return metric.ma_rally_days(self.close_prices(), 
+                                    self.wd1, self.wd2)
+
+    def ma_rally_days_html(self):
+        days = self.ma_rally_days()
+        if days >= 15:
+            return html.red(days)
+        if days <= 3:
+            return html.orange(days)
+        if days >= 13:
+            return html.orange(days)
+        return html.green(days)
 
     def ma_diff_trend_html(self):
         if self.ma_diff_trend() >= 0:

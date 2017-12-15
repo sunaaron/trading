@@ -37,16 +37,13 @@ class FundSymbol(Symbol):
         """
         if self.rsi_value() >= 68:
             return False
-        if self.ma_diff_value() >= 0.014:
+        if self.ma_rally_days() <= 3:
             return False
-        if self.ma_diff_value() >= 0.012 \
-                and self.ma_diff_trend() > 0:
+        if self.ma_rally_days() >= 13:
             return False
-        if self.ma_diff_value() <= -0.005:
-            return False
-        if self.ma_diff_value() <= -0.003 \
-                and self.ma_diff_trend() < 0:
-            return False
+        else:
+            if self.ma_diff_value() >= 0.018:
+                return False
         if self.perf_trend_since_year() < -0.02:
             return False
         if self.perf_trend_since_half_year() < -0.02:

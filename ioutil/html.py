@@ -30,7 +30,7 @@ def gen_finviz_image_td(symbol_str, img_url):
 
 def gen_perf_td(symbol_obj):
     html_str = '<td align=\"left\" valign=\"top\">'
-    for tp in ('1-Year', '3-Year', '5-Year', 
+    for tp in ('1-Year', '3-Year', '5-Year', '10-Year',
                  '2017', '2016', '2015',
                  '2014', '2013', '2012'):
         perf_str = symbol_obj.fund_perf(tp)
@@ -41,7 +41,7 @@ def gen_perf_td(symbol_obj):
         html_str += symbol_obj.yearly_perf_html(perf_str)
         html_str += ' / ' + symbol_obj.yearly_perf_html(perf_ca_str)
         html_str += '<br>'
-        if tp == '5-Year':
+        if tp == '10-Year':
             html_str += '<br>'
     
     html_str += '</td>'
@@ -70,11 +70,16 @@ def gen_left_td(symbol_obj):
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Rsi", 
                                 symbol_obj.rsi_html())
-    
-    html_str = "%s<br>%s: %s (%s)" %(html_str, 
-                                     "Ma_diff", 
-                                     symbol_obj.ma_diff_html(), 
-                                     symbol_obj.ma_diff_trend_html())
+
+    if symbol_obj.ma_rally_days() > 0:
+        html_str = "%s<br>%s(%s): %s for %s days" %(html_str, 
+                        "Ma_diff",  symbol_obj.ma_diff_trend_html(),
+                        symbol_obj.ma_diff_html(),
+                        symbol_obj.ma_rally_days_html())
+    else:
+        html_str = "%s<br>%s(%s): %s" %(html_str, "Ma_diff",  
+                                        symbol_obj.ma_diff_trend_html(),
+                                        symbol_obj.ma_diff_html())
 
     html_str = "%s<br>%s: %s / %s" %(html_str, 
             "Perf Momentum",
