@@ -48,18 +48,20 @@ def gen_perf_td(symbol_obj):
     return html_str
 
 def gen_left_td(symbol_obj):
-    yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol
+    finviz_url = constants.finviz_quote_url % symbol_obj.symbol
     html_str = '<tr><td align=\"left\" valign=\"top\" width=\"28%\">'
     html_str = '%s<strong><a href=\"%s\">%s</a></strong>' % (
-                    html_str, yahoo_url, symbol_obj.symbol)
+                    html_str, finviz_url, symbol_obj.symbol)
     
     if symbol_obj.is_pick_today():
         html_str = "%s (&#9733; %s &#9733;)" % (html_str, green("PoD"))
         
     if symbol_obj.is_high_volume():
         html_str = "%s (&#9889; %s &#9889;)" % (html_str, orange("HV"))
-    
-    html_str = "%s<br>%s" %(html_str, symbol_obj.desc)
+
+    yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol    
+    html_str = "%s<br><a href=\"%s\">%s</a>" %(
+                    html_str, yahoo_url, symbol_obj.desc)
 
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Change", 

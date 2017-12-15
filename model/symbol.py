@@ -160,7 +160,7 @@ class Symbol(object):
     def perf_weekly_by_14_day(self):
         perf = (self.close_prices()[-1] - 
                 self.close_prices()[-14]) / self.close_prices()[-14]
-        return metric.compound(perf/100, 2.8) # 14 business days = 2.8 wks
+        return metric.compound(perf, 2.8) # 14 business days = 2.8 wks
     
     def perf_trend_since_half_year(self):
         return metric.slope([
@@ -171,6 +171,8 @@ class Symbol(object):
                              ])
     
     def perf_trend_since_year(self):
+        if self.symbol == 'IBUY':
+            import ipdb; ipdb.set_trace()
         return metric.slope([
                              self.perf_weekly_by_year(),
                              self.perf_weekly_by_half_year(),
