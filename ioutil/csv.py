@@ -64,7 +64,8 @@ def gen_fund_caption():
     caption_str += "RSI" + "\t"
     caption_str += "MA_Diff" + "\t"
     caption_str += "Rel Volume" + "\t"
-    caption_str += "Perf Momentum" + "\t"
+    caption_str += "Perf Yr Momentum" + "\t"
+    caption_str += "Perf Yr/2 Momentum" + "\t"
     
     caption_str += "Dividend %" + "\t"
     caption_str += "Exp Ratio" + "\t"
@@ -85,7 +86,8 @@ def gen_fund_row(symbol_obj):
     row_str += str(symbol_obj.rsi) + "\t"
     row_str += str(symbol_obj.ma_diff) + "\t"
     row_str += str(symbol_obj.relative_volume()) + "\t"
-    row_str += str(symbol_obj.perf_trend()) + "\t"
+    row_str += str(symbol_obj.perf_trend_since_year()) + "\t"
+    row_str += str(symbol_obj.perf_trend_since_half_year()) + "\t"
 
     row_str += symbol_obj.attr_dict["Dividend %"] + "\t"
     row_str += symbol_obj.expense_ratio() + "\t"

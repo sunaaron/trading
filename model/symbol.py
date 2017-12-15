@@ -141,26 +141,45 @@ class Symbol(object):
             return html.green('&#8679;')
         return html.orange('&#8681;')
     
-    def perf_trend(self):
+    def perf_weekly_by_year(self):
         perf_year = misc.to_float_value(self.attr_dict['Perf Year'])
-        perf_half_year = misc.to_float_value(self.attr_dict['Perf Half Y'])
-        perf_quarter = misc.to_float_value(self.attr_dict['Perf Quarter'])
-        perf_month = misc.to_float_value(self.attr_dict['Perf Month'])
-        perf_biweek = (self.close_prices()[-1] - 
-                       self.close_prices()[-10]) / self.close_prices()[-10]  
-       
-        weekly_perf = [
-                       metric.compound(perf_year/100, 52), 
-                       metric.compound(perf_half_year/100, 26),
-                       metric.compound(perf_quarter/100, 13),
-                       metric.compound(perf_month/100, 4.3),
-                       metric.compound(perf_biweek, 2),
-                       ]
-        return metric.slope(weekly_perf)
+        return metric.compound(perf_year/100, 52)
     
-    def perf_trend_html(self):
-        perf_rate = self.perf_trend()
-        if perf_rate < -0.1:
+    def perf_weekly_by_half_year(self):
+        perf_half_year = misc.to_float_value(self.attr_dict['Perf Half Y'])
+        return metric.compound(perf_half_year/100, 26)
+        
+    def perf_weekly_by_quarter(self):
+        perf_quarter = misc.to_float_value(self.attr_dict['Perf Quarter'])
+        return metric.compound(perf_quarter/100, 13)
+        
+    def perf_weekly_by_month(self):
+        perf_month = misc.to_float_value(self.attr_dict['Perf Month'])
+        return metric.compound(perf_month/100, 4.33)
+
+    def perf_weekly_by_14_day(self):
+        perf = (self.close_prices()[-1] - 
+                self.close_prices()[-14]) / self.close_prices()[-14]
+        return metric.compound(perf/100, 2.8) # 14 business days = 2.8 wks
+    
+    def perf_trend_since_half_year(self):
+        return metric.slope([
+                             self.perf_weekly_by_half_year(),
+                             self.perf_weekly_by_quarter(),
+                             self.perf_weekly_by_month(),
+                             self.perf_weekly_by_14_day()
+                             ])
+    
+    def perf_trend_since_year(self):
+        return metric.slope([
+                             self.perf_weekly_by_year(),
+                             self.perf_weekly_by_half_year(),
+                             self.perf_weekly_by_quarter(),
+                             self.perf_weekly_by_month(),
+                             ])
+    
+    def perf_trend_html(self, perf_rate):
+        if perf_rate < -0.02:
             return html.red(perf_rate)
         if perf_rate > 0.1:
             return html.green(perf_rate)

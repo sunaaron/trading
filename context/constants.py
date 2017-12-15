@@ -7,7 +7,8 @@ Created on Nov 10, 2017
 
 # finviz_sector_url = "http://finviz.com/groups.ashx?g=sector&v=140&o=name"
 finviz_quote_url = "http://finviz.com/quote.ashx?t=%s"
-finviz_img_url = "http://finviz.com/chart.ashx?t=%s&ty=c&ta=1&p=d&s=l"
+finviz_weekly_img_url = "http://finviz.com/chart.ashx?t=%s&ty=l&ta=0&p=w&s=l"
+finviz_daily_img_url = "http://finviz.com/chart.ashx?t=%s&ty=c&ta=1&p=d&s=l"
 finviz_screen_url = "https://finviz.com/screener.ashx?v=111&f=cap_midover,fa_eps5years_o5,fa_epsyoy_o10,fa_epsyoy1_o5,fa_estltgrowth_pos,fa_netmargin_o5,fa_pe_profitable,fa_sales5years_o5,geo_usa,ta_sma200_pa&ft=4&o=sector"
 
 yahoo_q_url = "https://finance.yahoo.com/quote/%s"

@@ -21,8 +21,8 @@ def gen_table_header():
 def gen_table_footer():
     return '</table></body></head></html>'
 
-def gen_finviz_image_td(symbol_str):
-    img_src = constants.finviz_img_url % symbol_str
+def gen_finviz_image_td(symbol_str, img_url):
+    img_src = img_url % symbol_str
     html_str = '<td align=\"left\" valign=\"top\" width=\"50%\">'
     html_str = '%s<img src=\"%s\"' %(html_str, img_src)
     html_str += ' style=\"width:400px; height:auto;\"/></td>'
@@ -46,8 +46,8 @@ def gen_perf_td(symbol_obj):
     
     html_str += '</td>'
     return html_str
-    
-def fund_watch_html_str(symbol_obj):
+
+def gen_left_td(symbol_obj):
     yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol
     html_str = '<tr><td align=\"left\" valign=\"top\" width=\"28%\">'
     html_str = '%s<strong><a href=\"%s\">%s</a></strong>' % (
@@ -74,9 +74,11 @@ def fund_watch_html_str(symbol_obj):
                                      symbol_obj.ma_diff_html(), 
                                      symbol_obj.ma_diff_trend_html())
 
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "Perf Momentum",
-                                symbol_obj.perf_trend_html())
+    html_str = "%s<br>%s: %s / %s" %(html_str, 
+            "Perf Momentum",
+            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_year()),
+            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()) 
+            )
     
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Relative vol", 
@@ -105,12 +107,16 @@ def fund_watch_html_str(symbol_obj):
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "Expense Ratio", 
                                 symbol_obj.expense_ratio_html())
-
-    html_str += gen_finviz_image_td(symbol_obj.symbol)
+    html_str += "</td>"
+    return html_str
+    
+def fund_watch_html_str(symbol_obj):
+    html_str = gen_left_td(symbol_obj)
+    html_str += gen_finviz_image_td(symbol_obj.symbol, 
+                                    constants.finviz_weekly_img_url)
     html_str += gen_perf_td(symbol_obj)
     html_str += '</tr>'
     return html_str
-
 
 def get_index_symbols(symbol_lst):
     return [s for s in symbol_lst \
@@ -121,8 +127,9 @@ def get_non_index_symbols(symbol_lst):
                 if not s.symbol in constants.mkt_index]
 
 def gen_watchlist_fund_html(symbol_lst):
-    # Sort first by perf_trend and relative_volume
-    symbol_tuple_lst = [((symbol_obj.is_pick_today(), symbol_obj.perf_trend()), 
+    # Sort first by perf_trend_since_year and relative_volume
+    symbol_tuple_lst = [((symbol_obj.is_pick_today(), 
+                          symbol_obj.perf_trend_since_year()), 
                          symbol_obj) for symbol_obj in symbol_lst]
     symbol_tuple_lst.sort(reverse=True)
     sorted_symbol_lst = [tp[1] for tp in symbol_tuple_lst]

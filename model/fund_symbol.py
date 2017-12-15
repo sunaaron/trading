@@ -47,7 +47,9 @@ class FundSymbol(Symbol):
         if self.ma_diff_value() <= -0.003 \
                 and self.ma_diff_trend() < 0:
             return False
-        if self.perf_trend() < -0.02:
+        if self.perf_trend_since_year() < -0.02:
+            return False
+        if self.perf_trend_since_half_year() < -0.02:
             return False
         return True
 
