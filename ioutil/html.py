@@ -87,12 +87,12 @@ def gen_left_td(symbol_obj):
             symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()) 
             )
     
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "Relative vol", 
-                                symbol_obj.relative_volume_html())
+    html_str = "%s<br><u style=\"text-decoration-color: darkgray;\">%s: %s%s</u>" %(
+                html_str, 
+                "Relative vol", 
+                symbol_obj.relative_volume_html(), 
+                "&nbsp;"*24)
     
-    html_str = "%s<br>%s" %(html_str, "-"*46)
-
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "P/E", 
                                 symbol_obj.fund_pe_html())
@@ -148,6 +148,7 @@ def gen_watchlist_fund_html(symbol_lst):
     
     for symbol_obj in final_symbol_lst:
         html_str += fund_watch_html_str(symbol_obj)
+        html_str += '<tr></tr>'
     
     html_str += gen_table_footer()
     return html_str

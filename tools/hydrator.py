@@ -61,12 +61,18 @@ def hydrate_with_fund_summary(symbol_lst):
         
 def hydrate_with_fund_holdings(symbol_lst):
     logger.info("Running hydrate_with_fund_holdings")
-    symbol_holdings_dict = fetcher.fetch_batch(symbol_lst,
+    filtered_symbol_lst = filter.filter_local_existent_newer_than(
+                                local_symbol_dict, symbol_lst, days=5)
+    symbol_holdings_dict = fetcher.fetch_batch(filtered_symbol_lst,
                                 fetcher.fetch_holdings_from_yahoo)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
-        symbol_obj.holdings_dict = parser.parse_holdings_from_yahoo(
-                                symbol_holdings_dict[symbol_str])
+        if symbol_str in symbol_holdings_dict:
+            symbol_obj.holdings_dict = parser.parse_holdings_from_yahoo(
+                symbol_holdings_dict[symbol_str])
+        else:
+            symbol_obj.holdings_dict = \
+                local_symbol_dict[symbol_str].holdings_dict
 
 def hydrate_with_fund_perf(symbol_lst):
     logger.info("Running hydrate_with_fund_perf")
