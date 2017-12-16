@@ -4,6 +4,7 @@ Created on Dec 10, 2017
 @author: Aaron
 '''
 from ioutil import diskman
+from tools import filter
 
 
 def gen_stock_caption():
@@ -103,6 +104,7 @@ def gen_fund_row(symbol_obj):
 
 def gen_fund_table():
     symbol_lst = diskman.load_symbol_lst_by_pickle()
+    symbol_lst = filter.filter_tenure_less_than_a_year(symbol_lst)
     table_str = gen_fund_caption() + "\n"
     for symbol_obj in symbol_lst:
         table_str += gen_fund_row(symbol_obj) + "\n"

@@ -4,7 +4,7 @@ Created on Dec 9, 2017
 @author: Aaron
 '''
 from context import constants
-
+from tools import filter
 
 def red(text):
     return "<strong style=\"color: red;\">%s</strong>" % text

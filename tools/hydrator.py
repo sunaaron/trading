@@ -142,8 +142,8 @@ def hydrate_complete(symbol_lst):
     hydrate_with_quarterly_stmt(symbol_lst)
 
 def hydrate_fund(symbol_lst):
-    logger.info("Running hydrate_fund, hydrating %d symbols from %s" % (
-        len(symbol_lst), symbol_lst[0].symbol))
+    logger.info("Running hydrate_fund, hydrating %d symbols from %s to %s" % (
+        len(symbol_lst), symbol_lst[0].symbol, symbol_lst[-1].symbol))
     hydrate_with_details(symbol_lst)
     hydrate_with_historical_prices(symbol_lst)
     hydrate_with_fund_summary(symbol_lst)
