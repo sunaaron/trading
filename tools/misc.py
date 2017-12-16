@@ -58,9 +58,9 @@ def build_finviz_screen_movement_url():
     url_lst.insert(-2, "ta_change_u")
     return ",".join(url_lst)
 
-def timer(func):
+def timer(func, *args):
     start_tm = datetime.datetime.now()
-    func()
+    func(*args)
     end_tm = datetime.datetime.now()
     return "Completed in %d seconds" % (end_tm - start_tm).seconds
 

@@ -3,11 +3,12 @@ Created on Nov 10, 2017
 
 @author: Aaron
 '''
-from tools import misc
+from context import constants
+from tools import dateutil, misc
 from view import view
-from tools import dateutil
 
 
 if __name__ == '__main__':
     if dateutil.can_run():
-        print misc.timer(view.track_fundlist)
+        print misc.timer(view.track_fundlist,
+                         constants.dropbox_fundlist_url)

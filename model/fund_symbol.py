@@ -39,7 +39,9 @@ class FundSymbol(Symbol):
             return False
         if self.ma_rally_days() < 4:
             return False
-        if self.ma_rally_days() > 20:
+        if self.ma_rally_days() > 15:
+            # ma rally days > 15 usually means 
+            # the price rally is even longer
             return False
         else:
             if self.ma_diff_value() > 0.018:

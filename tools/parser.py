@@ -210,8 +210,8 @@ def parse_historical_prices_from_pandas(symbol_str, pandas_data):
 def parse_stock_watchlist_from_dropbox():
     return diskman.load_symbol_as_object("stock.txt")
 
-def parse_fund_watchlist_from_dropbox():
-    watchlist_file = open("fund.txt", "r")
+def parse_fund_watchlist_from_dropbox(filename):
+    watchlist_file = open(filename, "r")
     symbol_lst = []
     for line in watchlist_file:
         line_lst = line.split('-')

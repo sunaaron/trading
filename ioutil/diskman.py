@@ -66,9 +66,6 @@ def load_symbol_lst_by_pickle():
                     for p in path_lst if p.endswith(".pickle")]
     pickle_paths.sort() # smaller paths are loaded first
 
-    for i in xrange(len(pickle_paths)-1):
-        os.unlink(pickle_paths[i])
-    
     symbol_lst = []
     with open(pickle_paths[-1], "r") as f:
         cur_dict = pickle.load(f)
