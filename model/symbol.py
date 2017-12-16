@@ -156,7 +156,9 @@ class Symbol(object):
         return html.orange('&#8681;')
     
     def perf_weekly_by_year(self):
-        perf_year = misc.to_float_value(self.attr_dict['Perf Year'])
+        perf_year_str = self.attr_dict['Perf Year'] == '-' and \
+            self.attr_dict['Perf YTD'] or self.attr_dict['Perf Year']
+        perf_year = misc.to_float_value(perf_year_str)
         return metric.compound(perf_year/100, 52)
     
     def perf_weekly_by_half_year(self):

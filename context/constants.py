@@ -17,6 +17,8 @@ yahoo_hp_url =  "https://finance.yahoo.com/quote/%s/history/"
 yahoo_perf_url = "https://finance.yahoo.com/quote/%s/performance/"
 yahoo_risk_url = "https://finance.yahoo.com/quote/%s/risk/"
 
+bbg_quote_url = "https://www.bloomberg.com/quote/%s:US"
+
 dropbox_stocklist_url = "https://www.dropbox.com/s/efo19cicf604oxl/stock.txt"
 dropbox_fundlist_url = "https://www.dropbox.com/s/t7wfkzq85u13c43/fund.txt"
 dropbox_explist_url = "https://www.dropbox.com/s/3pz48x1x53h0nz7/exp.txt"

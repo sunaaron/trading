@@ -53,7 +53,7 @@ class FundSymbol(Symbol):
         return True
 
     def expense_ratio(self):
-        return self.summary_dict.get('Expense Ratio (net)', 'N/A')
+        return self.summary_dict.get('Expense Ratio', 'N/A')
     
     def expense_ratio_html(self):
         exp_ratio = self.expense_ratio()

@@ -49,11 +49,11 @@ def hydrate_with_fund_summary(symbol_lst):
     filtered_symbol_lst = filter.filter_local_existent_newer_than(
                                 local_symbol_dict, symbol_lst, days=31)
     symbol_summary_dict = fetcher.fetch_batch(filtered_symbol_lst,
-                                fetcher.fetch_summary_from_yahoo)
+                                fetcher.fetch_summary_from_bbg)
     for symbol_obj in symbol_lst:
         symbol_str = symbol_obj.symbol
         if symbol_str in symbol_summary_dict:
-            symbol_obj.summary_dict = parser.parse_summary_from_yahoo(
+            symbol_obj.summary_dict = parser.parse_summary_from_bbg(
                 symbol_summary_dict[symbol_str])
         else:
             symbol_obj.summary_dict = \

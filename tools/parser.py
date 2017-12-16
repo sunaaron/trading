@@ -206,6 +206,18 @@ def parse_historical_prices_from_pandas(symbol_str, pandas_data):
             symbol=symbol_str,
             d_sums=data
             )
+
+def parse_summary_from_bbg(raw_content):
+    summary_dict = {}
+    divs = BeautifulSoup(raw_content, "html.parser").findAll(
+                        "div", {"class": "cell"})
+    for div in divs:
+        cell_label = div.select('div[class="cell__label"]')
+        value_label = div.select('div[class*="cell__value"]')
+        cell = cell_label[0].text.strip(' ')
+        value = value_label[0].text.strip(' ')
+        summary_dict[cell] = value
+    return summary_dict
     
 def parse_stock_watchlist_from_dropbox():
     return diskman.load_symbol_as_object("stock.txt")
