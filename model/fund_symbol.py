@@ -13,7 +13,6 @@ class FundSymbol(Symbol):
                   "symbol", "symbol_type",
                   "desc",
                   "history_prices",
-                  "rsi", "ma_diff",
                   "attr_dict",
                   "summary_dict", 
                   "holdings_dict",
@@ -51,7 +50,7 @@ class FundSymbol(Symbol):
         return True
 
     def expense_ratio(self):
-        return self.summary_dict.get('Expense Ratio', 'N/A')
+        return self.summary_dict.get('Expense Ratio (net)', 'N/A')
     
     def expense_ratio_html(self):
         exp_ratio = self.expense_ratio()

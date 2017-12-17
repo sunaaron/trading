@@ -46,8 +46,6 @@ class Symbol(object):
         self.attr_dict = None
         self.history_prices = None
         
-        self.rsi = None
-        self.ma_diff = None
         self.wd1 = 20
         self.wd2 = 50
 
@@ -107,25 +105,19 @@ class Symbol(object):
         return self.attr_dict["Sector"]
       
     def rsi_value(self):
-        if self.rsi is None:
-            self.rsi = metric.rsi(self.close_prices())
-        return self.rsi
+        return misc.to_float_value(self.attr_dict['RSI (14)'])
     
     def rsi_html(self):
-        self.rsi_value()
-        if self.rsi >= 65:
-            return html.red(self.rsi)
-        if self.rsi <= 30:
-            return html.green(self.rsi)
-        return html.orange(self.rsi)
+        rsi = self.rsi_value()
+        if rsi >= 65:
+            return html.red(rsi)
+        if rsi <= 30:
+            return html.green(rsi)
+        return html.orange(rsi)
     
     def ma_diff_value(self):
-        if self.ma_diff is None:
-            self.ma_diff = metric.ma_diff_ratio(
-                                self.close_prices(), 
-                                self.wd1,
-                                self.wd2)
-        return self.ma_diff
+        return metric.ma_diff_ratio(
+            self.close_prices(), self.wd1, self.wd2)
     
     def ma_diff_html(self):
         return str(self.ma_diff_value())
