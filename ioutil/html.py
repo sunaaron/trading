@@ -34,12 +34,10 @@ def gen_perf_td(symbol_obj):
                  '2017', '2016', '2015',
                  '2014', '2013', '2012'):
         perf_str = symbol_obj.fund_perf(tp)
-        perf_ca_str = symbol_obj.fund_perf_category(tp)
         html_str += '<span style=\"width:25px;\">%s</span>: ' \
                     % tp
         
         html_str += symbol_obj.yearly_perf_html(perf_str)
-        html_str += ' / ' + symbol_obj.yearly_perf_html(perf_ca_str)
         html_str += '<br>'
         if tp == '10-Year':
             html_str += '<br>'

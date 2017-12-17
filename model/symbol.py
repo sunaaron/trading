@@ -157,9 +157,9 @@ class Symbol(object):
             return html.orange(days)
         return html.green(days)
     
-    def ma_rally_gain(self, tp='SHORT'):
-        ma_obj = self.ma_diff_dict[tp]
-        return ma_obj.rally_gain()
+    def ma_rally_gain(self):
+        return max((self.ma_diff_short.rally_gain(), 
+                    self.ma_diff_long.rally_gain()))
 
     def ma_rally_gain_html(self):
         gain = self.ma_rally_gain() * 100

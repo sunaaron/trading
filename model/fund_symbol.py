@@ -90,15 +90,12 @@ class FundSymbol(Symbol):
         return self.holdings_dict.get('holdings', [])
     
     def fund_perf(self, tp):
+        if tp == '1-Year':
+            return self.attr_dict['Perf Year']
         if tp in self.perf_dict:
             return self.perf_dict[tp][0]
         return 'N/A'
 
-    def fund_perf_category(self, tp):
-        if tp in self.perf_dict:    
-            return self.perf_dict[tp][1]
-        return 'N/A'
-    
     def five_year_risk_factor(self, name):
         if not name in self.risk_dict:
             return 'N/A'
