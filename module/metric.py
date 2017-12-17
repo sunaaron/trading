@@ -70,6 +70,13 @@ def ma_rally_days(values, window_1, window_2):
         days += 1
     return days
 
+def ma_rally_gain(values, window_1, window_2):
+    days = ma_rally_days(values, window_1, window_2)
+    price_start = values[-days]
+    price_now = values[-1]
+    price_change = (price_now-price_start) / price_start
+    return round(price_change, 4)
+
 def rsi(values, n=14):
     """
     Relative Strength Index

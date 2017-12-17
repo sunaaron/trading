@@ -128,16 +128,16 @@ class Symbol(object):
         return self.ma_diff
     
     def ma_diff_html(self):
-        self.ma_diff_value()
-        if self.ma_diff >= -0.005 and self.ma_diff <= 0.012:
-            return html.green(self.ma_diff)
-        if self.ma_diff > 0.012:
-            return html.red(self.ma_diff)
-        return html.orange(self.ma_diff)
+        return str(self.ma_diff_value())
     
-    def ma_diff_trend(self, days=5):
+    def ma_diff_trend(self, days=10):
         return metric.ma_diff_trend(self.close_prices(), 
                                     self.wd1, self.wd2)
+        
+    def ma_diff_trend_html(self):
+        if self.ma_diff_trend() >= 0:
+            return html.green('&#8679;')
+        return html.orange('&#8681;')
 
     def ma_rally_days(self):
         return metric.ma_rally_days(self.close_prices(), 
@@ -145,19 +145,25 @@ class Symbol(object):
 
     def ma_rally_days_html(self):
         days = self.ma_rally_days()
-        if days >= 15:
+        if days >= 20:
             return html.red(days)
-        if days <= 3:
-            return html.orange(days)
-        if days >= 13:
+        if days <= 5:
             return html.orange(days)
         return html.green(days)
-
-    def ma_diff_trend_html(self):
-        if self.ma_diff_trend() >= 0:
-            return html.green('&#8679;')
-        return html.orange('&#8681;')
     
+    def ma_rally_gain(self):
+        return metric.ma_rally_gain(self.close_prices(), 
+                                    self.wd1, self.wd2)
+
+    def ma_rally_gain_html(self):
+        gain = self.ma_rally_gain() * 100
+        gain_str = str(gain) + '%'
+        if gain <= 3:
+            return html.green(gain_str)
+        if gain > 3 and gain < 7:
+            return html.orange(gain_str)
+        return html.red(gain_str)
+
     def perf_weekly_by_year(self):
         perf_year_str = self.attr_dict['Perf Year'] == '-' and \
             self.attr_dict['Perf YTD'] or self.attr_dict['Perf Year']

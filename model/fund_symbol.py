@@ -35,17 +35,15 @@ class FundSymbol(Symbol):
         """
         This relaxes the condition a bit
         """
-        if self.rsi_value() >= 67:
+        if self.rsi_value() >= 65:
             return False
-        if self.ma_rally_days() < 3:
+        # Miss the train
+        if self.ma_rally_gain() > 0.035:
             return False
-        if self.ma_rally_days() > 15:
-            # ma rally days > 15 usually means 
-            # the price rally is even longer
+        if self.ma_rally_days() <= 3:
             return False
-        else:
-            if self.ma_diff_value() > 0.018:
-                return False
+        if self.ma_diff_trend(days=10) <= 0:
+            return False
         if self.perf_trend_since_year() <= -0.02:
             return False
         if self.perf_trend_since_half_year() <= -0.02:
