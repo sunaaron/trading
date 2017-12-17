@@ -59,17 +59,20 @@ class Symbol(object):
     def __setattr__(self, name, value):
         super(Symbol, self).__setattr__(name, value)
         if name == 'history_prices' and value is not None:
-            self.ma_diff_long = metric.MADIFF(
-                                    value.close_prices(), 20, 50)
             self.ma_diff_short = metric.MADIFF(
                                     value.close_prices(), 13, 34)
+            self.ma_diff_medium = metric.MADIFF(
+                                    value.close_prices(), 13, 50)
+            self.ma_diff_long = metric.MADIFF(
+                                    value.close_prices(), 20, 50)
             # The idea is for long term trend, such as rally-days, 
             # use ma_diff_long
             
             # for short term trend, such as rally-gain, use ma_diff_short
             # for others, either is fine
             self.ma_diff_dict = {
-                                 'LONG': self.ma_diff_long, 
+                                 'LONG': self.ma_diff_long,
+                                 'MEDIUM': self.ma_diff_medium, 
                                  'SHORT': self.ma_diff_short,
                                  }
             
@@ -136,7 +139,7 @@ class Symbol(object):
     def ma_diff_ratio_html(self):
         return str(self.ma_diff_ratio())
     
-    def ma_diff_trend(self, tp='SHORT'):
+    def ma_diff_trend(self, tp='LONG'):
         ma_obj = self.ma_diff_dict[tp]
         return ma_obj.trend()
         
@@ -159,7 +162,7 @@ class Symbol(object):
     
     def ma_rally_gain(self):
         return max((self.ma_diff_short.rally_gain(), 
-                    self.ma_diff_long.rally_gain()))
+                    self.ma_diff_medium.rally_gain()))
 
     def ma_rally_gain_html(self):
         gain = self.ma_rally_gain() * 100
