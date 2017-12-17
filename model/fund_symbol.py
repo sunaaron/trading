@@ -36,12 +36,12 @@ class FundSymbol(Symbol):
         """
         if self.rsi_value() >= 65:
             return False
+        if self.ma_rally_days() <= 0:
+            return False
         # Miss the train
         if self.ma_rally_gain() > 0.035:
             return False
-        if self.ma_rally_days() <= 3:
-            return False
-        if self.ma_diff_trend(days=10) <= 0:
+        if self.ma_diff_trend() <= 0:
             return False
         if self.perf_trend_since_year() <= -0.02:
             return False

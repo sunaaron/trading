@@ -38,48 +38,51 @@ def compound(change, window):
     x = math.pow(10, (math.log(actual, 10) / window)) - 1
     return round(x, 3) * 100
 
-def ma_diff_ratio(values, window_1, window_2):
-    """
-    values is ordered by date, ascendingly
-    """
-    ma_1_lst = ma(values, window_1)
-    ma_2_lst = ma(values, window_2)
-    ma_diff = (ma_1_lst[-1] - ma_2_lst[-1]) / ma_2_lst[-1]
-    return round(ma_diff, 4)
+class MADIFF(object):
+    def __init__(self, vals, wd1, wd2):
+        """
+            values is ordered by date, ascendingly
+        """
+        self.values = vals
+        self.ma_1_lst = ma(vals, wd1)
+        self.ma_2_lst = ma(vals, wd2)
 
-def ma_diff_trend(values, window_1, window_2, days=5):
-    ma_1_lst = ma(values, window_1)
-    ma_2_lst = ma(values, window_2)
-    if len(ma_1_lst) < days or len(ma_2_lst) < days:
-        return -100
-    ma_diffs = []
-    for i in xrange(-days, 0):
-        ma_diffs.append(ma_1_lst[i]-ma_2_lst[i])
-    return slope(ma_diffs)
+    def ratio(self, idx=-1):
+        ma_diff = (self.ma_1_lst[idx] - self.ma_2_lst[idx]) / \
+                    self.ma_2_lst[idx]
+        return round(ma_diff, 4)
 
-def ma_rally_days(values, window_1, window_2):
-    ma_1_lst = ma(values, window_1)
-    ma_2_lst = ma(values, window_2)
-    min_len = len(ma_1_lst) >= len(ma_2_lst) and \
-        len(ma_2_lst) or len(ma_1_lst) 
-    
-    i = -1
-    days = 0
-    start_idx = -min_len
-    while i >= start_idx:
-        ma_diff = (ma_1_lst[i] - ma_2_lst[i]) / ma_2_lst[i]
-        if ma_diff <= 0:
-            break
-        i -= 1
-        days += 1
-    return days
+    def trend(self, duration=10):
+        if len(self.ma_1_lst) < duration or \
+                len(self.ma_2_lst) < duration:
+            return -100
+        ma_diffs = []
+        for i in xrange(-duration, 0):
+            ma_diffs.append(self.ma_1_lst[i]-self.ma_2_lst[i])
+        return slope(ma_diffs)
 
-def ma_rally_gain(values, window_1, window_2):
-    days = ma_rally_days(values, window_1, window_2)
-    price_start = values[-days]
-    price_now = values[-1]
-    price_change = (price_now-price_start) / price_start
-    return round(price_change, 4)
+    def rally_days(self):
+        min_len = len(self.ma_1_lst) >= len(self.ma_2_lst) and \
+                len(self.ma_2_lst) or len(self.ma_1_lst) 
+        
+        i = -1
+        days = 0
+        start_idx = -min_len
+        while i >= start_idx:
+            ma_diff = (self.ma_1_lst[i] - self.ma_2_lst[i]) / \
+                    self.ma_2_lst[i]
+            if ma_diff <= 0:
+                break
+            i -= 1
+            days += 1
+        return days
+
+    def rally_gain(self):
+        days = self.rally_days()
+        price_start = self.values[-days]
+        price_now = self.values[-1]
+        price_change = (price_now-price_start) / price_start
+        return round(price_change, 4)
 
 def rsi(values, n=14):
     """

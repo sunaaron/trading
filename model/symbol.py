@@ -46,9 +46,6 @@ class Symbol(object):
         self.attr_dict = None
         self.history_prices = None
         
-        self.wd1 = 20
-        self.wd2 = 50
-
     def to_dict(self):
         symbol_dict = {}
         for attr in self.dict_attrs:
@@ -58,6 +55,23 @@ class Symbol(object):
     def from_dict(self, symbol_dict):
         for attr in self.dict_attrs:
             self.__setattr__(attr, symbol_dict[attr])
+            
+    def __setattr__(self, name, value):
+        super(Symbol, self).__setattr__(name, value)
+        if name == 'history_prices' and value is not None:
+            self.ma_diff_long = metric.MADIFF(
+                                    value.close_prices(), 23, 59)
+            self.ma_diff_short = metric.MADIFF(
+                                    value.close_prices(), 19, 41)
+            # The idea is for long term trend, such as rally-days, 
+            # use ma_diff_long
+            
+            # for short term trend, such as rally-gain, use ma_diff_short
+            # for others, either is fine
+            self.ma_diff_dict = {
+                                 'LONG': self.ma_diff_long, 
+                                 'SHORT': self.ma_diff_short,
+                                 }
             
     def latest_date(self):
         """ datetime.datetime type
@@ -115,40 +129,40 @@ class Symbol(object):
             return html.green(rsi)
         return html.orange(rsi)
     
-    def ma_diff_value(self):
-        return metric.ma_diff_ratio(
-            self.close_prices(), self.wd1, self.wd2)
+    def ma_diff_ratio(self, tp='LONG'):
+        ma_obj = self.ma_diff_dict[tp]
+        return ma_obj.ratio()
     
-    def ma_diff_html(self):
-        return str(self.ma_diff_value())
+    def ma_diff_ratio_html(self):
+        return str(self.ma_diff_ratio())
     
-    def ma_diff_trend(self, days=10):
-        return metric.ma_diff_trend(self.close_prices(), 
-                                    self.wd1, self.wd2)
+    def ma_diff_trend(self, tp='SHORT'):
+        ma_obj = self.ma_diff_dict[tp]
+        return ma_obj.trend()
         
     def ma_diff_trend_html(self):
         if self.ma_diff_trend() >= 0:
             return html.green('&#8679;')
         return html.orange('&#8681;')
 
-    def ma_rally_days(self):
-        return metric.ma_rally_days(self.close_prices(), 
-                                    self.wd1, self.wd2)
+    def ma_rally_days(self, tp='LONG'):
+        ma_obj = self.ma_diff_dict[tp]
+        return ma_obj.rally_days()
 
     def ma_rally_days_html(self):
-        days = self.ma_rally_days()
+        days = self.rally_days()
         if days >= 20:
             return html.red(days)
         if days <= 5:
             return html.orange(days)
         return html.green(days)
     
-    def ma_rally_gain(self):
-        return metric.ma_rally_gain(self.close_prices(), 
-                                    self.wd1, self.wd2)
+    def ma_rally_gain(self, tp='SHORT'):
+        ma_obj = self.ma_diff_dict[tp]
+        return ma_obj.rally_gain()
 
     def ma_rally_gain_html(self):
-        gain = self.ma_rally_gain() * 100
+        gain = self.rally_gain() * 100
         gain_str = str(gain) + '%'
         if gain <= 3:
             return html.green(gain_str)

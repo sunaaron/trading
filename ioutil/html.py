@@ -72,14 +72,16 @@ def gen_left_td(symbol_obj):
                                 symbol_obj.rsi_html())
 
     if symbol_obj.ma_rally_days() > 0:
-        html_str = "%s<br>%s(%s): %s for %s days" %(html_str, 
-                        "Ma_gain",  symbol_obj.ma_diff_trend_html(),
+        html_str = "%s<br>%s(%s): %s for %s days" %(
+                        html_str,
+                        "Ma_gain",
+                        symbol_obj.ma_diff_trend_html(),
                         symbol_obj.ma_rally_gain_html(),
                         symbol_obj.ma_rally_days_html())
     else:
         html_str = "%s<br>%s(%s): %s" %(html_str, "Ma_diff",  
                                         symbol_obj.ma_diff_trend_html(),
-                                        symbol_obj.ma_diff_html())
+                                        symbol_obj.ma_diff_ratio_html())
 
     html_str = "%s<br>%s: %s / %s" %(html_str, 
             "Perf Momentum",
