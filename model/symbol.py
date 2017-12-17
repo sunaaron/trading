@@ -183,9 +183,12 @@ class Symbol(object):
         return metric.compound(perf_month/100, 4.33)
 
     def perf_weekly_by_14_day(self):
+        num_days = 14
+        if len(self.close_prices()) < num_days:
+            return -1
         perf = (self.close_prices()[-1] - 
-                self.close_prices()[-14]) / self.close_prices()[-14]
-        return metric.compound(perf, 2.8) # 14 business days = 2.8 wks
+                self.close_prices()[-num_days]) / self.close_prices()[-num_days]
+        return metric.compound(perf, num_days/5.0) # 14 business days = 2.8 wks
     
     def perf_trend_since_half_year(self):
         return metric.slope([

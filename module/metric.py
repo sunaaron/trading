@@ -8,6 +8,8 @@ import math
 import numpy as np
 
 def ma(values, window):
+    if window > len(values):
+        return np.asarray(values)
     weights = np.repeat(1.0, window) / window
     smas = np.convolve(values, weights, 'valid')
     return smas
@@ -48,6 +50,8 @@ def ma_diff_ratio(values, window_1, window_2):
 def ma_diff_trend(values, window_1, window_2, days=5):
     ma_1_lst = ma(values, window_1)
     ma_2_lst = ma(values, window_2)
+    if len(ma_1_lst) < days or len(ma_2_lst) < days:
+        return -100
     ma_diffs = []
     for i in xrange(-days, 0):
         ma_diffs.append(ma_1_lst[i]-ma_2_lst[i])
