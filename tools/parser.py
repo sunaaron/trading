@@ -226,6 +226,8 @@ def parse_fund_watchlist_from_dropbox(filename):
     watchlist_file = open(filename, "r")
     symbol_lst = []
     for line in watchlist_file:
+        if line.startswith('#') or len(line) <= 5:
+            continue
         line_lst = line.split('\t')
         symbol_str = line_lst[0].strip(' ')
         symbol_desc = line_lst[1].strip(' \r\n')
