@@ -60,33 +60,34 @@ def dump_symbol_lst_by_pickle(symbol_lst):
         pickle.dump(symbol_dict, f) 
     f.close()
 
-def load_symbol_lst_by_pickle():
-    symbol_lst = []
+def load_symbol_dict_by_pickle():
+    symbol_dict = {}
     path_lst = os.listdir("./data")
     pickle_paths = ["./data/%s" % p 
                     for p in path_lst if p.endswith(".pickle")]
     if len(pickle_paths) == 0:
-        return symbol_lst
-
-    pickle_paths.sort() # smaller paths are loaded first
-
-    with open(pickle_paths[-1], "r") as f:
-        cur_dict = pickle.load(f)
-    f.close()
+        return symbol_dict
     
-    for cur_symbol_str in cur_dict:
-        symbol_type = cur_dict[cur_symbol_str]['symbol_type']
-        symbol_obj = helper.gen_symbol_obj(
-                        cur_symbol_str, symbol_type)
-        symbol_obj.from_dict(cur_dict[cur_symbol_str])
-        symbol_lst.append(symbol_obj)
+    for path in pickle_paths:
+        with open(path, "r") as f:
+            pickle_dict = pickle.load(f)
+            for symbol_str in pickle_dict:
+                symbol_type = pickle_dict[symbol_str]['symbol_type']
+                symbol_obj = helper.gen_symbol_obj(
+                                symbol_str, symbol_type)
+                symbol_obj.from_dict(pickle_dict[symbol_str])
+                if not symbol_str in symbol_dict:
+                    symbol_dict[symbol_str] = symbol_obj
+                else:
+                    if symbol_obj.is_newer_than(symbol_dict[symbol_str]):
+                        symbol_dict[symbol_str] = symbol_obj
     
-    return symbol_lst
+    return symbol_dict
 
-def load_symbol_dict_by_pickle():
-    symbol_lst = load_symbol_lst_by_pickle()
-    return {symbol_obj.symbol: symbol_obj for symbol_obj in symbol_lst}
-
+def load_symbol_lst_by_pickle():
+    symbol_dict = load_symbol_dict_by_pickle()
+    return symbol_dict.values()
+    
 def save_csv(csv_str):
     with open("./data/csv.txt", "w") as f:
         f.write(csv_str)

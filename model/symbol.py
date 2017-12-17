@@ -65,6 +65,9 @@ class Symbol(object):
         """ datetime.datetime type
         """
         return self.history_prices.daily_summaries[-1].date
+    
+    def is_newer_than(self, another):
+        return self.latest_date() > another.latest_date()
 
     def open_prices(self):
         return self.history_prices.open_prices()

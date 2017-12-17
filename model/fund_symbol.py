@@ -37,7 +37,7 @@ class FundSymbol(Symbol):
         """
         if self.rsi_value() >= 67:
             return False
-        if self.ma_rally_days() < 4:
+        if self.ma_rally_days() < 3:
             return False
         if self.ma_rally_days() > 15:
             # ma rally days > 15 usually means 
