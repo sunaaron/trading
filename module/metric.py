@@ -39,13 +39,13 @@ def compound(change, window):
     return round(x, 3) * 100
 
 class MADIFF(object):
-    def __init__(self, vals, wd1, wd2):
+    def __init__(self, vals, ma1, ma2):
         """
             values is ordered by date, ascendingly
         """
         self.values = vals
-        self.ma_1_lst = ma(vals, wd1)
-        self.ma_2_lst = ma(vals, wd2)
+        self.ma_1_lst = ma1
+        self.ma_2_lst = ma2
 
     def ratio(self, idx=-1):
         ma_diff = (self.ma_1_lst[idx] - self.ma_2_lst[idx]) / \

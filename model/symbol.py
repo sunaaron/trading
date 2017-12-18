@@ -59,12 +59,18 @@ class Symbol(object):
     def __setattr__(self, name, value):
         super(Symbol, self).__setattr__(name, value)
         if name == 'history_prices' and value is not None:
+            vals = value.close_prices()
+            ma_13 = metric.ma(vals, 13)
+            ma_20 = metric.ma(vals, 20)
+            ma_34 = metric.ma(vals, 34)
+            ma_50 = metric.ma(vals, 50)
+            
             self.ma_diff_short = metric.MADIFF(
-                                    value.close_prices(), 13, 34)
+                                    vals, ma_13, ma_34)
             self.ma_diff_medium = metric.MADIFF(
-                                    value.close_prices(), 13, 50)
+                                    vals, ma_13, ma_50)
             self.ma_diff_long = metric.MADIFF(
-                                    value.close_prices(), 20, 50)
+                                    vals, ma_20, ma_50)
             # The idea is for long term trend, such as rally-days, 
             # use ma_diff_long
             
