@@ -79,7 +79,7 @@ class MADIFF(object):
 
     def rally_gain(self):
         days = self.rally_days()
-        price_start = self.values[-days]
+        price_start = self.values[-(days+1)]
         price_now = self.values[-1]
         price_change = (price_now-price_start) / price_start
         return round(price_change, 4)
