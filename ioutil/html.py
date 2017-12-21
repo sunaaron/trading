@@ -137,7 +137,7 @@ def gen_watchlist_fund_html(symbol_lst):
     # Sort first by perf_trend_since_year and relative_volume
     symbol_lst = filter.filter_tenure_less_than_a_year(symbol_lst)
     symbol_tuple_lst = [((symbol_obj.is_pick_today(), 
-                          symbol_obj.perf_trend_since_year()), 
+                          symbol_obj.perf_trend_since_half_year()), 
                          symbol_obj) for symbol_obj in symbol_lst]
     symbol_tuple_lst.sort(reverse=True)
     sorted_symbol_lst = [tp[1] for tp in symbol_tuple_lst]
