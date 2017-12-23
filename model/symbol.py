@@ -102,11 +102,9 @@ class Symbol(object):
     def change_html(self):
         change = self.change()
         change_str = str(change) + '%'
-        if change >= 1:
+        if change >= 0:
             return html.green(change_str)
-        if change < 0:
-            return html.red(change_str)
-        return html.orange(change_str)
+        return html.red(change_str)
     
     def relative_volume(self):
         return float(self.attr_dict["Rel Volume"])

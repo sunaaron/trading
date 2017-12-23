@@ -81,7 +81,7 @@ def gen_left_td(symbol_obj):
                                         symbol_obj.ma_diff_trend_html(),
                                         symbol_obj.ma_diff_ratio_html())
 
-    html_str = "%s<br>%s: %s / %s" %(html_str, 
+    html_str = "%s<br>%s: %s / %s (Y)" %(html_str, 
             "Perf Momentum",
             symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()),
             symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_year())

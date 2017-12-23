@@ -80,9 +80,9 @@ class FundSymbol(Symbol):
         pe_str = self.holdings_dict.get('Price/Earnings', 'N/A')
         if pe == 'N/A':
             return html.orange(pe)
-        if pe >= 50:
+        if pe >= 40:
             return html.red(pe_str)
-        if pe >= 35 and pe < 50: 
+        if pe >= 30 and pe < 40: 
             return html.orange(pe_str)
         return html.green(pe_str)
     
