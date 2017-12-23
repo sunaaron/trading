@@ -91,6 +91,8 @@ class FundSymbol(Symbol):
     
     def fund_perf(self, tp):
         if tp == '1-Year':
+            if self.attr_dict['Perf Year'] == '-':
+                return self.attr_dict['Perf YTD']
             return self.attr_dict['Perf Year']
         if tp in self.perf_dict:
             return self.perf_dict[tp][0]

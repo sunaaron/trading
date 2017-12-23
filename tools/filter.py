@@ -33,8 +33,7 @@ def filter_tenure_less_than_a_year(symbol_lst):
     filtered_symbol_lst = []
     for symbol_obj in symbol_lst:
         if symbol_obj.attr_dict['Perf Half Y'] == '-' or \
-                symbol_obj.attr_dict['Perf Year'] == '-' or \
-                    symbol_obj.attr_dict['Perf Quarter'] == '-':
+                symbol_obj.attr_dict['Perf Quarter'] == '-':
             continue
         else:
             filtered_symbol_lst.append(symbol_obj)
