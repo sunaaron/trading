@@ -83,8 +83,8 @@ def gen_left_td(symbol_obj):
 
     html_str = "%s<br>%s: %s / %s" %(html_str, 
             "Perf Momentum",
-            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_year()),
-            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()) 
+            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()),
+            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_year())
             )
     
     html_str = "%s<br><u style=\"text-decoration-color: darkgray;\">%s: %s%s</u>" %(
