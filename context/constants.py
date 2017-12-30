@@ -26,4 +26,4 @@ dropbox_explist_url = "https://www.dropbox.com/s/3pz48x1x53h0nz7/exp.txt"
 mw_annual_url = "https://www.marketwatch.com/investing/stock/%s/financials"
 mw_quarterly_url = "https://www.marketwatch.com/investing/stock/%s/financials/income/quarter"
 
-mkt_index = {'DIA': 1, 'SPY': 1, 'ONEQ': 1, 'VIXM': 1}
+mkt_index = {'DIA': 1, 'VOO': 1, 'ONEQ': 1, 'VIXM': 1}
