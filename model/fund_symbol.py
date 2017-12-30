@@ -68,6 +68,19 @@ class FundSymbol(Symbol):
     def net_assets(self):
         return self.summary_dict.get('Net Assets', 'N/A')
     
+    def net_assets_html(self):
+        ast_str = self.net_assets()
+        if ast_str.endswith('B'):
+            return html.green(ast_str)
+        if ast_str.endswith('M'):
+            ast_value = float(ast_str[:-1])
+            if ast_value <= 100:
+                return html.red(ast_str)
+            if ast_value > 100 and ast_value <= 300:
+                return html.orange(ast_str)
+            return html.green(ast_str)
+        return html.red(ast_str)
+    
     def fund_pe(self):
         try:
             return misc.to_float_value(

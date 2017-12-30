@@ -98,14 +98,17 @@ def gen_left_td(symbol_obj):
                                 symbol_obj.fund_pe_html())
 
     beta = symbol_obj.five_year_beta()
-    html_str = "%s<br>%s: %s" %(html_str, 
-                                "5YR-Beta", 
-                                symbol_obj.beta_html(beta))
-    
     treynor = symbol_obj.five_year_treynor()
+    html_str = "%s<br>%s: %s / %s" %(html_str, 
+                                     "5YR-Beta-Treynor", 
+                                     symbol_obj.beta_html(beta), 
+                                     symbol_obj.treynor_html(treynor))
+    
+    
     html_str = "%s<br>%s: %s" %(html_str, 
-                                "5YR-Treynor", 
-                                symbol_obj.treynor_html(treynor))
+                                "Assets",
+                                symbol_obj.net_assets_html()
+                                )
     
     html_str = "%s<br>%s: <b>%s</b>" %(html_str, 
                                        "Dividend", 
