@@ -35,6 +35,11 @@ def fetch_summary_from_bbg(symbol_str):
     return urllib2.urlopen(url).read()
     
 @retry(urllib2.URLError, tries=3, delay=3, backoff=2)
+def fetch_markets_from_cnn():
+    hp_url = constants.cnn_markets_url
+    return urllib2.urlopen(hp_url).read()
+    
+@retry(urllib2.URLError, tries=3, delay=3, backoff=2)
 def fetch_summary_from_yahoo(symbol_str):
     hp_url = constants.yahoo_q_url % symbol_str
     return urllib2.urlopen(hp_url).read()

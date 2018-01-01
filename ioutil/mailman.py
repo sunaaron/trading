@@ -46,3 +46,7 @@ def gen_daily_screen_subject(symbol_lst):
 def gen_daily_watch_subject(watch_type):
     return "Daily %s Watch List - %s" % (
             watch_type, dateutil.get_today_date())
+
+def gen_correlation_subject():
+    return "Side-to-side correlation inspection"
+

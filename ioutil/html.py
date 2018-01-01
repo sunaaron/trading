@@ -21,6 +21,21 @@ def gen_table_header():
 def gen_table_footer():
     return '</table></body></head></html>'
 
+def gen_market_tr(index_dict):
+    def change_html(value):
+        if value.startswith('-'):
+            return red(value)
+        return green(value)
+    
+    html_str = '<tr><td></td>'
+    for market in constants.markets_lst:
+        html_str += '<span><b>%s:</b> </span>' % market
+        html_str += '<span>%s</span>' % \
+            change_html(index_dict[market])
+        html_str += '&nbsp;'
+    html_str += '<td></td></tr>'
+    return html_str
+
 def gen_finviz_image_td(symbol_str, img_url):
     img_src = img_url % symbol_str
     html_str = '<td align=\"left\" valign=\"top\" width=\"50%\">'
@@ -130,13 +145,13 @@ def fund_watch_html_str(symbol_obj):
 
 def get_index_symbols(symbol_lst):
     return [s for s in symbol_lst \
-                if s.symbol in constants.mkt_index]
+                if s.symbol in constants.sticky_dict]
 
 def get_non_index_symbols(symbol_lst):
     return [s for s in symbol_lst \
-                if not s.symbol in constants.mkt_index]
+                if not s.symbol in constants.sticky_dict]
 
-def gen_watchlist_fund_html(symbol_lst):
+def gen_watchlist_fund_html(symbol_lst, index_dict):
     # Sort first by perf_trend_since_year and relative_volume
     symbol_lst = filter.filter_tenure_less_than_a_year(symbol_lst)
     symbol_tuple_lst = [((symbol_obj.is_pick_today(), 
@@ -149,10 +164,26 @@ def gen_watchlist_fund_html(symbol_lst):
     final_symbol_lst.extend(get_non_index_symbols(sorted_symbol_lst))
 
     html_str = gen_table_header()
+    html_str += gen_market_tr(index_dict)
     
     for symbol_obj in final_symbol_lst:
         html_str += fund_watch_html_str(symbol_obj)
         html_str += '<tr></tr>'
     
+    html_str += gen_table_footer()
+    return html_str
+
+def gen_correlation_html(coef_lst):
+    html_str = gen_table_header()
+
+    for pair in coef_lst:
+        symbol_str_left = pair[0].symbol
+        symbol_str_right = pair[1].symbol
+        html_str += '<tr>'
+        html_str += gen_finviz_image_td(symbol_str_left, 
+                                        constants.finviz_monthly_img_url)
+        html_str += gen_finviz_image_td(symbol_str_right, 
+                                        constants.finviz_monthly_img_url)
+        html_str += '</tr>'
     html_str += gen_table_footer()
     return html_str

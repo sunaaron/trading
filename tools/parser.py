@@ -89,6 +89,18 @@ def parse_stmt_from_mw(raw_content):
         income = [td.text for td in td_income if td.text != '-']
     return sales, income
 
+def parse_markets_from_cnn(raw_content):
+    index_dict = {}
+    ul = BeautifulSoup(raw_content, "html.parser").\
+        select('ul[class*="three-equal-columns"]')
+    lis = ul[0].select("li")
+    for li in lis:
+        spans = li.select("span")
+        market = spans[0].text
+        change = spans[2].text
+        index_dict[market] = change
+    return index_dict
+
 def parse_summary_from_yahoo(raw_content):
     summary_dict = {}
     trs = BeautifulSoup(
@@ -235,3 +247,16 @@ def parse_fund_watchlist_from_dropbox(filename):
         symbol_obj.desc = symbol_desc
         symbol_lst.append(symbol_obj)
     return symbol_lst
+
+def parse_coef_list_from_dropbox():
+    watchlist_file = open('coef.txt', "r")
+    coef_lst = []
+    for line in watchlist_file:
+        line_lst = line.split('\t')
+        symbol_str_left = line_lst[0].strip(' ') 
+        symbol_str_right = line_lst[1].strip(' \r\n') 
+        symbol_obj_left = FundSymbol(symbol_str_left)
+        symbol_obj_right = FundSymbol(symbol_str_right)
+        coef_lst.append((symbol_obj_left, 
+                           symbol_obj_right))
+    return coef_lst
