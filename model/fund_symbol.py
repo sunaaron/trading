@@ -49,6 +49,8 @@ class FundSymbol(Symbol):
             return False
         if self.perf_trend_since_half_year() <= -0.02:
             return False
+        if self.price_below_ma200():
+            return False
         return True
 
     def expense_ratio(self):

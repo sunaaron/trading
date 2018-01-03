@@ -72,6 +72,11 @@ def gen_left_td(symbol_obj):
     if symbol_obj.is_high_volume():
         html_str = "%s (&#9889; %s &#9889;)" % (html_str, orange("HV"))
 
+    if symbol_obj.price_below_ma200():
+        html_str = "%s (&#9760; %s &#9760;)" % (html_str, red("B-200"))
+    elif symbol_obj.price_below_ma50():
+        html_str = "%s (&#9785; %s &#9785;)" % (html_str, orange("B-50"))
+
     yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol    
     html_str = "%s<br><a href=\"%s\">%s</a>" %(
                     html_str, yahoo_url, symbol_obj.desc)
