@@ -49,4 +49,4 @@ def hydrate_and_dump_diff_symbols():
     """
     diff_symbols = diskman.load_symbol_as_object("./data/diff.txt")
     hydrator.batch_hydrate(diff_symbols, hydrator.hydrate_complete)
-    diskman.dump_symbol_lst_by_pickle(diff_symbols)
+    diskman.dump_symbol_lst(diff_symbols)

@@ -5,7 +5,7 @@ Created on Nov 11, 2017
 '''
 from module import metric
 from tools import misc
-from ioutil import html
+from ioutil import format
 
 class DailySummary(object):
     def __init__(self, dt, op, cp, vol):
@@ -110,8 +110,8 @@ class Symbol(object):
         change = self.change()
         change_str = str(change) + '%'
         if change >= 0:
-            return html.green(change_str)
-        return html.red(change_str)
+            return format.green(change_str)
+        return format.red(change_str)
     
     def relative_volume(self):
         return float(self.attr_dict["Rel Volume"])
@@ -122,10 +122,10 @@ class Symbol(object):
     def relative_volume_html(self):
         rel_vol = self.relative_volume()
         if rel_vol > 1.2:
-            return html.green(rel_vol)
+            return format.green(rel_vol)
         if rel_vol <= 1.2 and rel_vol >= 0.8:
-            return html.orange(rel_vol)
-        return html.red(rel_vol)
+            return format.orange(rel_vol)
+        return format.red(rel_vol)
     
     def sector(self):
         if self.screen_dict is not None:
@@ -138,10 +138,10 @@ class Symbol(object):
     def rsi_html(self):
         rsi = self.rsi_value()
         if rsi >= 65:
-            return html.red(rsi)
+            return format.red(rsi)
         if rsi <= 30:
-            return html.green(rsi)
-        return html.orange(rsi)
+            return format.green(rsi)
+        return format.orange(rsi)
     
     def ma_diff_ratio(self, tp='LONG'):
         ma_obj = self.ma_diff_dict[tp]
@@ -156,8 +156,8 @@ class Symbol(object):
         
     def ma_diff_trend_html(self):
         if self.ma_diff_trend() >= 0:
-            return html.green('&#8679;')
-        return html.orange('&#8681;')
+            return format.green('&#8679;')
+        return format.orange('&#8681;')
 
     def ma_rally_days(self, tp='LONG'):
         ma_obj = self.ma_diff_dict[tp]
@@ -166,10 +166,10 @@ class Symbol(object):
     def ma_rally_days_html(self):
         days = self.ma_rally_days()
         if days >= 20:
-            return html.red(days)
+            return format.red(days)
         if days <= 5:
-            return html.orange(days)
-        return html.green(days)
+            return format.orange(days)
+        return format.green(days)
     
     def ma_rally_gain(self):
         return max((self.ma_diff_short.rally_gain(), 
@@ -179,10 +179,10 @@ class Symbol(object):
         gain = self.ma_rally_gain() * 100
         gain_str = str(gain) + '%'
         if gain <= 3:
-            return html.green(gain_str)
+            return format.green(gain_str)
         if gain > 3 and gain < 7:
-            return html.orange(gain_str)
-        return html.red(gain_str)
+            return format.orange(gain_str)
+        return format.red(gain_str)
 
     def perf_weekly_by_year(self):
         perf_year_str = self.attr_dict['Perf Year'] == '-' and \
@@ -228,27 +228,27 @@ class Symbol(object):
     
     def perf_trend_html(self, perf_rate):
         if perf_rate < -0.02:
-            return html.red(perf_rate)
+            return format.red(perf_rate)
         if perf_rate > 0.1:
-            return html.green(perf_rate)
-        return html.orange(perf_rate)
+            return format.green(perf_rate)
+        return format.orange(perf_rate)
     
     def yearly_perf_html(self, value_str):
         if value_str == 'N/A':
             return value_str
         value = misc.to_float_value(value_str)
         if value >= 10:
-            return html.green(value_str)
+            return format.green(value_str)
         if value >= 3:
-            return html.orange(value_str)
-        return html.red(value_str)
+            return format.orange(value_str)
+        return format.red(value_str)
 
     def beta_html(self, value_str):
         if value_str == 'N/A':
             return value_str
         value = misc.to_float_value(value_str)
         if value >= 1.25:
-            return html.red(value_str)
+            return format.red(value_str)
         if value >= 1.05:
-            return html.orange(value_str)
-        return html.green(value_str)
+            return format.orange(value_str)
+        return format.green(value_str)

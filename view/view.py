@@ -23,8 +23,8 @@ def track_fundlist(dropbox_url):
     filename = os.path.basename(dropbox_url)
     symbol_lst = parser.parse_fund_watchlist_from_dropbox(filename)
     hydrator.batch_hydrate(symbol_lst, hydrator.hydrate_fund)
+    diskman.dump_symbol_lst(symbol_lst)
     summary_str = html.gen_watchlist_fund_html(symbol_lst, index_dict)
-    diskman.dump_symbol_lst_by_pickle(symbol_lst)
     mailman.send_email(mailman.gen_daily_watch_subject("fund"), 
                        summary_str)
 
@@ -35,5 +35,3 @@ def track_correlation():
     summary_str = html.gen_correlation_html(coef_lst)
     mailman.send_email(mailman.gen_correlation_subject(), 
                        summary_str)
-
-    

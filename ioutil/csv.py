@@ -51,8 +51,8 @@ def gen_stock_row(symbol_obj):
     return row_str.rstrip("\t")
 
 def gen_stock_table():
-    symbol_lst = diskman.load_symbol_lst_by_pickle()
-    diskman.dump_symbol_lst_by_pickle(symbol_lst)
+    symbol_lst = diskman.load_symbol_lst()
+    diskman.dump_symbol_lst(symbol_lst)
     table_str = gen_stock_caption() + "\n"
     for symbol_obj in symbol_lst:
         table_str += gen_stock_row(symbol_obj) + "\n"
@@ -107,7 +107,7 @@ def gen_fund_row(symbol_obj):
     return row_str.rstrip("\t")
 
 def gen_fund_table():
-    symbol_lst = diskman.load_symbol_lst_by_pickle()
+    symbol_lst = diskman.load_symbol_lst()
     symbol_lst = filter.filter_tenure_less_than_a_year(symbol_lst)
     table_str = gen_fund_caption() + "\n"
     for symbol_obj in symbol_lst:

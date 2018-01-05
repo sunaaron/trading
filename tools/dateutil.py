@@ -18,6 +18,24 @@ def get_weekday():
     """
     return datetime.datetime.today().weekday()
 
+def get_last_week_range():
+    # weekdays only, and the output range only covers 5 days
+    weekday = get_weekday()
+    start_delta = datetime.timedelta(days=weekday, weeks=1)
+    start_day = get_today_date() - start_delta
+    end_delta = datetime.timedelta(days=4)
+    end_day = start_day + end_delta
+    return (start_day, end_day)
+
+def get_last_week_range_as_str():
+    start_day, end_day = get_last_week_range()
+    return (str(start_day), str(end_day))
+
+def get_last_month():
+    first_day = get_today_date().replace(day=1)
+    lastMonth = first_day - datetime.timedelta(days=1)
+    return (lastMonth.year, lastMonth.month)
+
 def can_run():
     """
     As measured by UTC time (a bit tricky)

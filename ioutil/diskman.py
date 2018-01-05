@@ -23,7 +23,6 @@ def save_symbol_as_str(symbol_lst, path):
         output_str += symbol.symbol + "\n"
     with open(path, "w") as f:
         f.write(output_str.rstrip("\n"))
-    f.close()
     
 def save_symbol_set_as_str(symbol_set, path):
     output_lst = []
@@ -33,7 +32,6 @@ def save_symbol_set_as_str(symbol_set, path):
     output_str = "\n".join(output_lst)
     with open(path, "w") as f:
         f.write(output_str.rstrip("\n"))
-    f.close()
     
 def load_symbol_as_object(path):
     symbol_file = open(path, "r")
@@ -45,7 +43,7 @@ def load_symbol_as_str(path):
     symbol_strs = symbol_file.read().split("\n")
     return [symbol_str.rstrip('\r') for symbol_str in symbol_strs]
 
-def dump_symbol_lst_by_pickle(symbol_lst):
+def dump_symbol_lst(symbol_lst):
     symbol_strs = []
     symbol_dict = {}
     for symbol_obj in symbol_lst:
@@ -58,9 +56,14 @@ def dump_symbol_lst_by_pickle(symbol_lst):
                                        str(dateutil.get_today_date()))
     with open(path, "w") as f:
         pickle.dump(symbol_dict, f) 
-    f.close()
+    
+    path = "./data/old/%s_%s_%s.pickle" % (symbol_strs[0], 
+                                           symbol_strs[-1], 
+                                           str(dateutil.get_today_date()))
+    with open(path, "w") as f:
+        pickle.dump(symbol_dict, f)
 
-def load_symbol_dict_by_pickle():
+def load_symbol_dict_overwritten():
     symbol_dict = {}
     path_lst = os.listdir("./data")
     pickle_paths = ["./data/%s" % p 
@@ -84,11 +87,47 @@ def load_symbol_dict_by_pickle():
     
     return symbol_dict
 
-def load_symbol_lst_by_pickle():
-    symbol_dict = load_symbol_dict_by_pickle()
+def load_symbol_lst():
+    symbol_dict = load_symbol_dict_overwritten()
     return symbol_dict.values()
     
 def save_csv(csv_str):
     with open("./data/csv.txt", "w") as f:
         f.write(csv_str)
-    f.close()
+
+def get_pickle_paths_old():
+    path_lst = os.listdir("./data/old")
+    return ["./data/old/%s" % p 
+            for p in path_lst if p.endswith(".pickle")]
+
+def get_pickle_path_today():
+    for path in get_pickle_paths_old():
+        path_date = path.split('_')[2].split('.')[0]
+        if path_date == str(dateutil.get_today_date()):
+            return [path]
+
+def get_pickle_paths_last_week():
+    last_week_range = dateutil.get_last_week_range_as_str()
+    last_week_paths = []
+    for path in get_pickle_paths_old():
+        path_date = path.split('_')[2].split('.')[0]
+        if path_date >= last_week_range[0] and \
+                path_date <= last_week_range[1]:
+            last_week_paths.append(path)
+    return last_week_paths
+    
+def load_symbol_dict_by_date(pickle_paths):
+    date_symbol_dict = {}
+    for path in pickle_paths:
+        path_date = path.split('_')[2].split('.')[0]
+        symbol_dict = {}
+        with open(path, "r") as f:
+            pickle_dict = pickle.load(f)
+            for symbol_str in pickle_dict:
+                symbol_type = pickle_dict[symbol_str]['symbol_type']
+                symbol_obj = helper.gen_symbol_obj(
+                                symbol_str, symbol_type)
+                symbol_obj.from_dict(pickle_dict[symbol_str])
+                symbol_dict[symbol_str] = symbol_obj
+        date_symbol_dict[path_date] = symbol_dict
+    return date_symbol_dict

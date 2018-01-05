@@ -4,7 +4,7 @@ Created on Dec 9, 2017
 @author: Aaron
 '''
 from tools import misc
-from ioutil import html
+from ioutil import format
 from model.symbol import Symbol
 
 
@@ -59,13 +59,13 @@ class FundSymbol(Symbol):
     def expense_ratio_html(self):
         exp_ratio = self.expense_ratio()
         if exp_ratio == 'N/A':
-            return html.orange(exp_ratio)
+            return format.orange(exp_ratio)
         expense_ratio = misc.to_float_value(exp_ratio)
         if expense_ratio >= 0.5:
-            return html.red(exp_ratio)
+            return format.red(exp_ratio)
         if expense_ratio >= 0.4:
-            return html.orange(exp_ratio)
-        return html.green(exp_ratio)
+            return format.orange(exp_ratio)
+        return format.green(exp_ratio)
     
     def net_assets(self):
         return self.summary_dict.get('Net Assets', 'N/A')
@@ -73,15 +73,15 @@ class FundSymbol(Symbol):
     def net_assets_html(self):
         ast_str = self.net_assets()
         if ast_str.endswith('B'):
-            return html.green(ast_str)
+            return format.green(ast_str)
         if ast_str.endswith('M'):
             ast_value = float(ast_str[:-1])
             if ast_value <= 100:
-                return html.red(ast_str)
+                return format.red(ast_str)
             if ast_value > 100 and ast_value <= 300:
-                return html.orange(ast_str)
-            return html.green(ast_str)
-        return html.red(ast_str)
+                return format.orange(ast_str)
+            return format.green(ast_str)
+        return format.red(ast_str)
     
     def fund_pe(self):
         try:
@@ -94,12 +94,12 @@ class FundSymbol(Symbol):
         pe = self.fund_pe()
         pe_str = self.holdings_dict.get('Price/Earnings', 'N/A')
         if pe == 'N/A':
-            return html.orange(pe)
+            return format.orange(pe)
         if pe >= 40:
-            return html.red(pe_str)
+            return format.red(pe_str)
         if pe >= 30 and pe < 40: 
-            return html.orange(pe_str)
-        return html.green(pe_str)
+            return format.orange(pe_str)
+        return format.green(pe_str)
     
     def holdings(self):
         return self.holdings_dict.get('holdings', [])
@@ -135,7 +135,7 @@ class FundSymbol(Symbol):
             return value_str
         value = misc.to_float_value(value_str)
         if value > 5:
-            return html.green(value_str)
+            return format.green(value_str)
         if value <= 0:
-            return html.red(value_str)
-        return html.orange(value_str)
+            return format.red(value_str)
+        return format.orange(value_str)

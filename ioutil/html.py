@@ -4,16 +4,10 @@ Created on Dec 9, 2017
 @author: Aaron
 '''
 from context import constants
-from tools import filter
+from tools import filter, ranker
+from ioutil import format
 
-def red(text):
-    return "<strong style=\"color: red;\">%s</strong>" % text
-
-def green(text):
-    return "<strong style=\"color: green;\">%s</strong>" % text
-
-def orange(text):
-    return "<strong style=\"color: orange;\">%s</strong>" % text
+relative_rank_y2_dict, relative_rank_y_dict = ranker.get_relative_ranking_dicts()
 
 def gen_table_header():
     return '<html><head><body><table>'
@@ -24,8 +18,8 @@ def gen_table_footer():
 def gen_market_tr(index_dict):
     def change_html(value):
         if value.startswith('-'):
-            return red(value)
-        return green(value)
+            return format.red(value)
+        return format.green(value)
     
     html_str = '<tr><td></td>'
     for market in constants.markets_lst:
@@ -67,15 +61,15 @@ def gen_left_td(symbol_obj):
                     html_str, finviz_url, symbol_obj.symbol)
     
     if symbol_obj.is_pick_today():
-        html_str = "%s (&#9733; %s &#9733;)" % (html_str, green("PoD"))
+        html_str = "%s (&#9733; %s &#9733;)" % (html_str, format.green("PoD"))
         
     if symbol_obj.is_high_volume():
-        html_str = "%s (&#9889; %s &#9889;)" % (html_str, orange("HV"))
+        html_str = "%s (&#9889; %s &#9889;)" % (html_str, format.orange("HV"))
 
     if symbol_obj.price_below_ma200():
-        html_str = "%s (&#9760; %s &#9760;)" % (html_str, red("B-200"))
+        html_str = "%s (&#9760; %s &#9760;)" % (html_str, format.red("B-200"))
     elif symbol_obj.price_below_ma50():
-        html_str = "%s (&#9785; %s &#9785;)" % (html_str, orange("B-50"))
+        html_str = "%s (&#9785; %s &#9785;)" % (html_str, format.orange("B-50"))
 
     yahoo_url = constants.yahoo_holdings_url % symbol_obj.symbol    
     html_str = "%s<br><a href=\"%s\">%s</a>" %(
@@ -101,17 +95,27 @@ def gen_left_td(symbol_obj):
                                         symbol_obj.ma_diff_trend_html(),
                                         symbol_obj.ma_diff_ratio_html())
 
-    html_str = "%s<br>%s: %s / %s (Y)" %(html_str, 
-            "Perf Momentum",
-            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()),
-            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_year())
+    html_str = "%s<br>%s: %s" %(
+            html_str, "Trend Y/2",
+            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_half_year()), 
             )
     
-    html_str = "%s<br><u style=\"text-decoration-color: darkgray;\">%s: %s%s</u>" %(
-                html_str, 
-                "Relative vol", 
-                symbol_obj.relative_volume_html(), 
-                "&nbsp;"*24)
+    if not symbol_obj.symbol in constants.sticky_dict:
+        rank_change = relative_rank_y2_dict.get(symbol_obj.symbol, ('N/A', 'N/A'))[1]
+        html_str = "%s (%s)" %(
+            html_str, format.rank_change_html(rank_change)
+            )
+
+    html_str = "%s<br><u style=\"text-decoration-color: darkgray;\">%s: %s</u>" %(
+            html_str, "Trend Year",
+            symbol_obj.perf_trend_html(symbol_obj.perf_trend_since_year())
+            )
+
+    if not symbol_obj.symbol in constants.sticky_dict:
+        rank_change = relative_rank_y_dict.get(symbol_obj.symbol, ('N/A', 'N/A'))[1] 
+        html_str = "%s<u style=\"text-decoration-color: darkgray;\"> (%s)</u>" %(
+            html_str, format.rank_change_html(rank_change)
+            )
     
     html_str = "%s<br>%s: %s" %(html_str, 
                                 "P/E", 
