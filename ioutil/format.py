@@ -13,6 +13,8 @@ def orange(text):
     return "<strong style=\"color: orange;\">%s</strong>" % text
 
 def rank_change_html(rank_change):
+    if rank_change == 'N/A':
+        return rank_change
     if rank_change > 0:
         return green('+' + str(rank_change))
     if rank_change == 0:
