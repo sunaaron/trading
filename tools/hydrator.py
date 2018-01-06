@@ -15,7 +15,7 @@ local_symbol_dict = diskman.load_symbol_dict_overwritten()
 def hydrate_with_details(symbol_lst):
     logger.info("Running hydrate_with_details")
     filtered_symbol_lst = filter.filter_local_existent_newer_than(
-                                local_symbol_dict, symbol_lst, days=5)
+                                local_symbol_dict, symbol_lst, days=0)
     symbol_details_dict = fetcher.fetch_batch(filtered_symbol_lst, 
                             fetcher.fetch_symbol_details_from_finviz)
     for symbol_obj in symbol_lst:
@@ -31,7 +31,7 @@ def hydrate_with_details(symbol_lst):
 def hydrate_with_historical_prices(symbol_lst):
     logger.info("Running hydrate_with_historical_prices")
     filtered_symbol_lst = filter.filter_local_existent_newer_than(
-                                local_symbol_dict, symbol_lst, days=5)
+                                local_symbol_dict, symbol_lst, days=0)
     symbol_hp_dict = fetcher.fetch_batch(filtered_symbol_lst,
                         fetcher.fetch_historical_prices_from_pandas)
     for symbol_obj in symbol_lst:
