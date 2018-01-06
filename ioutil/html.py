@@ -7,8 +7,6 @@ from context import constants
 from tools import filter, ranker
 from ioutil import format
 
-relative_rank_y2_dict, relative_rank_y_dict = ranker.get_relative_ranking_dicts()
-
 def gen_table_header():
     return '<html><head><body><table>'
 
@@ -54,7 +52,9 @@ def gen_perf_td(symbol_obj):
     html_str += '</td>'
     return html_str
 
-def gen_left_td(symbol_obj):
+def gen_left_td(symbol_obj, 
+                relative_rank_y2_dict,
+                relative_rank_y_dict):
     finviz_url = constants.finviz_quote_url % symbol_obj.symbol
     html_str = '<tr><td align=\"left\" valign=\"top\" width=\"28%\">'
     html_str = '%s<strong><a href=\"%s\">%s</a></strong>' % (
@@ -144,8 +144,12 @@ def gen_left_td(symbol_obj):
     html_str += "</td>"
     return html_str
     
-def fund_watch_html_str(symbol_obj):
-    html_str = gen_left_td(symbol_obj)
+def fund_watch_html_str(symbol_obj, 
+                        relative_rank_y2_dict, 
+                        relative_rank_y_dict):
+    html_str = gen_left_td(symbol_obj, 
+                           relative_rank_y2_dict, 
+                           relative_rank_y_dict)
     html_str += gen_finviz_image_td(symbol_obj.symbol, 
                                     constants.finviz_weekly_img_url)
     html_str += gen_perf_td(symbol_obj)
@@ -175,8 +179,13 @@ def gen_watchlist_fund_html(symbol_lst, index_dict):
     html_str = gen_table_header()
     html_str += gen_market_tr(index_dict)
     
+    relative_rank_y2_dict, relative_rank_y_dict = \
+        ranker.get_relative_ranking_dicts()
+    
     for symbol_obj in final_symbol_lst:
-        html_str += fund_watch_html_str(symbol_obj)
+        html_str += fund_watch_html_str(symbol_obj, 
+                                        relative_rank_y2_dict, 
+                                        relative_rank_y_dict)
         html_str += '<tr></tr>'
     
     html_str += gen_table_footer()
