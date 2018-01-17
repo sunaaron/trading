@@ -191,11 +191,15 @@ class Symbol(object):
         return metric.compound(perf_year/100, 52)
     
     def perf_weekly_by_half_year(self):
-        perf_half_year = misc.to_float_value(self.attr_dict['Perf Half Y'])
+        perf_half_year_str = self.attr_dict['Perf Half Y'] == '-' and \
+            self.attr_dict['Perf YTD'] or self.attr_dict['Perf Half Y']
+        perf_half_year = misc.to_float_value(perf_half_year_str)
         return metric.compound(perf_half_year/100, 26)
         
     def perf_weekly_by_quarter(self):
-        perf_quarter = misc.to_float_value(self.attr_dict['Perf Quarter'])
+        perf_quarter_str = self.attr_dict['Perf Quarter'] == '-' and \
+            self.attr_dict['Perf YTD'] or self.attr_dict['Perf Quarter']
+        perf_quarter = misc.to_float_value(perf_quarter_str)
         return metric.compound(perf_quarter/100, 13)
         
     def perf_weekly_by_month(self):
